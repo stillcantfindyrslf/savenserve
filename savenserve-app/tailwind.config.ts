@@ -12,7 +12,12 @@ export default {
     extend: {
       colors: {
         background: "var(--background)",
-        foreground: "var(--foreground)",
+        // foreground: "var(--foreground)",
+        "primary-color": "var(--primary-color)",
+        "secondary-color": "var(--secondary-color)",
+        "light-secondary-color": "var(--light-secondary-color)",
+        "color-text": "var(--text-color)",
+        "light-white-color": "var(--light-white)",
       },
     },
   },
