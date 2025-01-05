@@ -65,29 +65,36 @@ const menuItems = [
 
 const AppNavbar = () => {
 	const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
 	return (
-		<div className="fixed top-4 left-4 right-4 z-50 mx-auto max-w-5xl bg-primary-color rounded-2xl">
-			<Navbar className="px-3 rounded-2xl h-20" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
-					<RxHamburgerMenu size="24" className="text-light-white-color cursor-pointer" onClick={() => setIsMenuOpen(!isMenuOpen)}/>
+			<Navbar
+				maxWidth="xl"
+				className="px-4 rounded-2xl w-full h-20 bg-primary-color"
+				isMenuOpen={isMenuOpen}
+				onMenuOpenChange={setIsMenuOpen}
+			>
+					<RxHamburgerMenu size="24" className=" text-light-white-color cursor-pointer" onClick={() => setIsMenuOpen(!isMenuOpen)}/>
 				<NavbarContent>
 					<NavbarBrand className="ml-2">
-						<p className="hidden sm:block text-light-white-color font-bold text-2xl">Logotype</p>
+						<p className="text-light-white-color font-bold text-2xl">SaveNServe</p>
 					</NavbarBrand>
-					<Input
-						isClearable
-						fullWidth="true"
-						placeholder="Искать Продукты, Овощи, или Мясо..."
-						size="xl"
-						radius="full"
-						startContent={<SearchIcon size={18}/>}
-						type="search"
-					/>
+					<div className="hidden sm:block w-full ml-8 mr-20">
+						<Input
+							isClearable
+							fullWidth="true"
+							placeholder="Искать Продукты, Овощи или Мясо..."
+							size="xl"
+							radius="full"
+							startContent={<SearchIcon size={18}/>}
+							type="search"
+						/>
+					</div>
 					<p className="text-light-white-color text-small max-w-42 whitespace-nowrap">
 						Заказывай и получи в <span className="text-secondary-color"> течении 15 мин!</span>
 					</p>
 					<Button
 						isIconOnly
-						className="bg-white text-black p-2.5 rounded-full shadow-lg hover:bg-gray-200"
+						className="bg-light-white-color text-black p-2.5 rounded-full shadow-lg hover:bg-gray-200"
 						aria-label="Shopping Cart"
 					>
 						<PiShoppingCartSimpleBold className="text-color-text" size={28}/>
@@ -96,7 +103,7 @@ const AppNavbar = () => {
 						<DropdownTrigger>
 							<Button
 								isIconOnly
-								className="bg-white text-black p-2.5 rounded-full shadow-lg hover:bg-gray-200"
+								className="bg-light-white-color text-black p-2.5 rounded-full shadow-lg hover:bg-gray-200"
 								aria-label="User"
 							>
 								<BiUser className="text-color-text" size={28}/>
@@ -136,7 +143,6 @@ const AppNavbar = () => {
 					))}
 				</NavbarMenu>
 			</Navbar>
-		</div>
 	);
 };
 

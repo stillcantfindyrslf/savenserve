@@ -1,9 +1,7 @@
-import AppNavbar from "@/components/AppNavbar";
+import MainPage from "@/components/pages/MainPage";
 
 export default function Home() {
 	return (
-		<div className="flex justify-center items-center">
-			<AppNavbar/>
-		</div>
+		<MainPage />
 	);
 }
