@@ -1,6 +1,6 @@
 import AppSlider from "@/components/AppSlider";
 import FloatingNavbar from "@/components/organisms/FloatingNavbar";
-import LogoutButton from "@/components/LogoutButton";
+import LoginButton from "@/components/LoginButton";
 
 export default function MainPage() {
 	return (
@@ -8,7 +8,7 @@ export default function MainPage() {
 			<div className="max-w-7xl mx-auto px-5">
 				<FloatingNavbar />
 				<AppSlider />
-				<LogoutButton />
+				<LoginButton />
 			</div>
 		</>
 	);
