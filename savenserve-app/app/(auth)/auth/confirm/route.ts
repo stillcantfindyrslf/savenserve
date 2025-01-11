@@ -1,33 +1,31 @@
-import { type EmailOtpType } from '@supabase/supabase-js'
-import { type NextRequest, NextResponse } from 'next/server'
-
-import { createClient } from '@/utils/supabase/server'
+import { type EmailOtpType } from '@supabase/supabase-js';
+import { type NextRequest } from 'next/server';
+import { createClient } from '@/utils/supabase/server';
+import { redirect } from 'next/navigation';
 
 export async function GET(request: NextRequest) {
-	const { searchParams } = new URL(request.url)
-	const token_hash = searchParams.get('token_hash')
-	const type = searchParams.get('type') as EmailOtpType | null
-	const next = searchParams.get('next') ?? '/'
-
-	const redirectTo = request.nextUrl.clone()
-	redirectTo.pathname = next
-	redirectTo.searchParams.delete('token_hash')
-	redirectTo.searchParams.delete('type')
+	const { searchParams } = new URL(request.url);
+	const token_hash = searchParams.get('token_hash');
+	const type = searchParams.get('type') as EmailOtpType | null;
+	const next = searchParams.get('next') ?? '/'; // Путь по умолчанию - главная страница
 
 	if (token_hash && type) {
-		const supabase = await createClient()
+		const supabase = await createClient();
 
+		// Проверяем OTP
 		const { error } = await supabase.auth.verifyOtp({
 			type,
 			token_hash,
-		})
+		});
+
 		if (!error) {
-			redirectTo.searchParams.delete('next')
-			return NextResponse.redirect(redirectTo)
+			// Перенаправляем пользователя на указанный путь или на главную страницу
+			return redirect(next);
+		} else {
+			console.error('Error verifying OTP:', error.message);
 		}
 	}
 
-	// return the user to an error page with some instructions
-	redirectTo.pathname = '/error'
-	return NextResponse.redirect(redirectTo)
+	// Если произошла ошибка верификации, перенаправляем на главную страницу
+	return redirect('/');
 }
