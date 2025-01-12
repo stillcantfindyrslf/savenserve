@@ -1,72 +1,26 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { createClient } from '@/utils/supabase/client';
-import {Button, Checkbox, Input, Link} from "@nextui-org/react";
+import {useState} from 'react';
+import {Button, Input} from "@nextui-org/react";
 import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "@nextui-org/modal";
+import useAuthStore from "@/store/useAuthStore";
+const AuthModal = () => {
+	const {
+		isAuthModalOpen,
+		closeAuthModal,
+		toggleAuthMode,
+		handleAuth,
+		isLogin,
+		loading,
+		error,
+	} = useAuthStore();
 
-export const AuthModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [isLogin, setIsLogin] = useState(true);
-	const [error, setError] = useState('');
-	const [loading, setLoading] = useState(false);
-	const [user, setUser] = useState<any>(null); // Хранение данных пользователя
 
-	const supabase = createClient();
-
-	// Функция для обработки входа/регистрации
-	const handleAuth = async () => {
-		setError('');
-		setLoading(true);
-		try {
-			if (isLogin) {
-				const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-				if (error) throw error;
-				setUser(data.user); // Сохраняем данные пользователя после входа
-			} else {
-				const { data, error } = await supabase.auth.signUp({ email, password });
-				if (error) throw error;
-				setUser(data.user); // Сохраняем данные пользователя после регистрации
-			}
-			onClose();
-		} catch (err: any) {
-			setError(err.message);
-		} finally {
-			setLoading(false);
-		}
+	const handleSubmit = async () => {
+		await handleAuth(email, password);
 	};
-
-	// Отслеживание изменений сессии пользователя
-	useEffect(() => {
-		const { subscription } = supabase.auth.onAuthStateChange((_event, session) => {
-			setUser(session?.user || null); // Обновляем пользователя при изменении сессии
-		});
-
-		// Получение текущего пользователя при загрузке компонента
-		const getUser = async () => {
-			const { data } = await supabase.auth.getUser();
-			setUser(data.user);
-		};
-
-		getUser();
-
-		// Очистка подписки при размонтировании
-		return () => {
-			subscription?.unsubscribe();
-		};
-	}, [supabase]);
-
-	// Закрытие модального окна и сброс состояния
-	const handleClose = () => {
-		setEmail('');
-		setPassword('');
-		setError('');
-		setIsLogin(true);
-		onClose();
-	};
-
-	if (!isOpen) return null;
 
 	const MailIcon = (props) => {
 		return (
@@ -113,57 +67,54 @@ export const AuthModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
 	};
 
 	return (
-		<Modal isOpen={isOpen} placement="top-center" onClose={onClose}>
+		<Modal isOpen={isAuthModalOpen} placement="top-center" onClose={closeAuthModal}>
 			<ModalContent className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-				<h2 className="text-xl font-bold mb-4">{isLogin ? 'Вход' : 'Регистрация'}</h2>
-				{error && <p className="text-red-500 mb-4">{error}</p>}
-				<ModalBody className="flex flex-col gap-3 px-0 py-0">
+				<ModalHeader>
+					<h2 className="text-xl font-bold">{isLogin ? 'Вход' : 'Регистрация'}</h2>
+				</ModalHeader>
+				<ModalBody className="flex flex-col gap-3">
+					{error && <p className="text-red-500">{error}</p>}
 					<Input
 						endContent={
-							<MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+							<MailIcon className="text-default-400 pointer-events-none flex-shrink-0" />
 						}
-						type="email"
 						label="Email"
+						type="email"
 						placeholder="Введите email"
-						variant="bordered"
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
+						variant="bordered"
 					/>
 					<Input
 						endContent={
-							<LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+							<LockIcon className="text-default-400 pointer-events-none flex-shrink-0" />
 						}
 						label="Пароль"
 						type="password"
 						placeholder="Введите пароль"
-						variant="bordered"
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
+						variant="bordered"
 					/>
+				</ModalBody>
+				<ModalFooter>
 					<Button
-						onPress={handleAuth}
 						disabled={loading}
-						className={`w-full  mb-3 ${
-							loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'
-						}`}
+						onPress={handleSubmit}
+						className={`w-full ${loading ? 'bg-gray-400' : 'bg-blue-500 text-white'}`}
 					>
 						{loading ? 'Обработка...' : isLogin ? 'Войти' : 'Зарегистрироваться'}
 					</Button>
-				</ModalBody>
-
-				<p className="text-sm text-center">
-					{isLogin ? 'Нет аккаунта?' : 'Уже есть аккаунт?'}{' '}
-					<span
-						onClick={() => setIsLogin(!isLogin)}
-						className="text-blue-500 cursor-pointer underline"
-					>
-            {isLogin ? 'Регистрация' : 'Войти'}
-          </span>
-				</p>
-				<button onClick={handleClose} className="mt-4 text-gray-500 block mx-auto">
-					Закрыть
-				</button>
+					<p className="text-sm text-center">
+						{isLogin ? 'Нет аккаунта?' : 'Уже есть аккаунт?'}{' '}
+						<span onClick={toggleAuthMode} className="text-blue-500 cursor-pointer">
+              {isLogin ? 'Регистрация' : 'Войти'}
+            </span>
+					</p>
+				</ModalFooter>
 			</ModalContent>
 		</Modal>
 	);
 };
+
+export default AuthModal;
