@@ -45,6 +45,12 @@ const useAuthStore = create<AuthState>((set, get) => ({
 			console.error('Logout error:', err.message);
 		}
 	},
+
+	subscribeToAuthChanges: () => {
+		supabase.auth.onAuthStateChange((event, session) => {
+			set({ user: session?.user || null });
+		});
+	},
 }));
 
 export default useAuthStore;

@@ -9,7 +9,7 @@ interface ItemCardProps {
 
 const ItemsList: FC<ItemCardProps> = ({ items }) => {
 	return (
-		<div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+		<div className="mt-32 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
 			{items.map((item) => (
 				<ItemCard
 					key={item.id}

@@ -7,11 +7,15 @@ import { useItemsStore } from "@/store/useItemStore/useItemStore";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { fetchItems } from "@/api/items";
+import useAuthStore from "@/store/useAuthStore";
 
 export default function MainPage() {
-	const { items, fetchItems } = useItemsStore(); // Переместите вызов хука сюда
+	const { items, fetchItems } = useItemsStore();
+	const { subscribeToAuthChanges } = useAuthStore();
 
 	useEffect(() => {
+		subscribeToAuthChanges();
+
 		const loadData = async () => {
 			try {
 				await fetchItems();
@@ -25,7 +29,7 @@ export default function MainPage() {
 	return (
 		<div className="max-w-7xl mx-auto px-5">
 			<FloatingNavbar />
-			<AppSlider />
+			{/*<AppSlider />*/}
 			<ItemsList items={items} />
 		</div>
 	);

@@ -11,7 +11,7 @@ interface ItemCardProps {
 const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
 	return (
 			<Card
-				className="max-w-[300px] p-3"
+				className="max-w-xs p-3"
 				shadow="none"
 				key={item.id}
 			>
@@ -23,9 +23,13 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
 						height={200}
 						objectFit="cover"
 					/>
-					<p>{item.name}</p>
-					 <p>{item.description}</p>
-					<p>${item.price}</p>
+					<div className="flex flex-col items-center mt-4 text-center">
+						<p className="text-2xl font-bold text-primary-color">
+							{item.price} р.
+						</p>
+						<h3 className="font-semibold text-md leading-4 line-clamp-2">{item.name}</h3>
+						<p className="text-sm leading-4 line-clamp-2 mt-2">{item.description}</p>
+					</div>
 				</CardBody>
 				<CardFooter>
 						<Button fullWidth={true} className="bg-light-secondary-color">Добавить в корзину</Button>
