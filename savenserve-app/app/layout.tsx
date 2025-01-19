@@ -1,6 +1,9 @@
+'use client';
 import {Geist, Geist_Mono, Montserrat} from "next/font/google";
 import "./globals.css";
 import {NextUIProvider} from "@nextui-org/react";
+import useAuthStore from "@/store/useAuthStore";
+import {useEffect} from "react";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -25,8 +28,15 @@ export default function RootLayout({
 																	 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+
+	const { subscribeToAuthChanges } = useAuthStore();
+
+	useEffect(() => {
+		subscribeToAuthChanges();
+	}, []);
+
 	return (
-		<html lang="en" className="bg-background">
+		<html lang="en" className="bg-background-color">
 			<body
 				className={`${montserrat.variable}`}
 			>

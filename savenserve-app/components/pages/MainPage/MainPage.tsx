@@ -11,10 +11,8 @@ import useAuthStore from "@/store/useAuthStore";
 
 export default function MainPage() {
 	const { items, fetchItems } = useItemsStore();
-	const { subscribeToAuthChanges } = useAuthStore();
 
 	useEffect(() => {
-		subscribeToAuthChanges();
 
 		const loadData = async () => {
 			try {

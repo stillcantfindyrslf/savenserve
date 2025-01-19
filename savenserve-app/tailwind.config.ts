@@ -11,7 +11,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
+        "background-color": "var(--background)",
         // foreground: "var(--foreground)",
         "primary-color": "var(--primary-color)",
         "secondary-color": "var(--secondary-color)",

@@ -68,10 +68,10 @@ const menuItems = [
 
 const FloatingNavbar = () => {
 	const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-	const { user, openAuthModal, handleLogout } = useAuthStore();
+	const {user, openAuthModal, handleLogout} = useAuthStore();
 
 	return (
-		<div className="fixed top-0 left-0 right-0 h-auto bg-background z-50">
+		<div className="fixed top-0 left-0 right-0 h-auto bg-background-color z-50">
 			<div className="mt-5 mb-5 px-5 mx-auto z-50 max-w-7xl">
 				<Navbar
 					maxWidth="xl"
@@ -99,13 +99,15 @@ const FloatingNavbar = () => {
 						<p className="text-light-white-color text-small max-w-42 whitespace-nowrap">
 							Заказывай и получи в <span className="text-secondary-color"> течении 15 мин!</span>
 						</p>
-						<Button
-							isIconOnly
-							className="bg-light-white-color text-black p-2.5 rounded-full shadow-lg hover:bg-gray-200"
-							aria-label="Shopping Cart"
-						>
-							<PiShoppingCartSimpleBold className="text-color-text" size={28}/>
-						</Button>
+						<Link href="/cart" passHref>
+							<Button
+								isIconOnly
+								className="bg-light-white-color text-black p-2.5 rounded-full shadow-lg hover:bg-gray-200"
+								aria-label="Shopping Cart"
+							>
+								<PiShoppingCartSimpleBold className="text-color-text" size={28}/>
+							</Button>
+						</Link>
 						<Dropdown placement="bottom-end">
 							<DropdownTrigger>
 								<Button
@@ -117,21 +119,21 @@ const FloatingNavbar = () => {
 								</Button>
 							</DropdownTrigger>
 							<DropdownMenu className="text-gray-800" aria-label="Profile Actions" variant="flat">
-									{user ? (
-										<>
-											<DropdownItem key="user" className="h-14 gap-2">
-												<p className="font-semibold">Вошел как</p>
-												<p>{user.email}</p>
-											</DropdownItem>
-											<DropdownItem key="logout" color="danger" onPress={handleLogout}>
-												Выйти
-											</DropdownItem>
-										</>
-									) : (
-										<DropdownItem key="login" onPress={openAuthModal}>
-											Войти
+								{user ? (
+									<>
+										<DropdownItem key="user" className="h-14 gap-2">
+											<p className="font-semibold">Вошел как</p>
+											<p>{user.email}</p>
 										</DropdownItem>
-									)}
+										<DropdownItem key="logout" color="danger" onPress={handleLogout}>
+											Выйти
+										</DropdownItem>
+									</>
+								) : (
+									<DropdownItem key="login" onPress={openAuthModal}>
+										Войти
+									</DropdownItem>
+								)}
 								<DropdownItem href="/admin">Админ панель</DropdownItem>
 							</DropdownMenu>
 						</Dropdown>
@@ -154,7 +156,7 @@ const FloatingNavbar = () => {
 					</NavbarMenu>
 				</Navbar>
 			</div>
-			<AuthModal />
+			<AuthModal/>
 		</div>
 	);
 };
