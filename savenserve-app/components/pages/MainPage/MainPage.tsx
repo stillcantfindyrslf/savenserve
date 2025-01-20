@@ -25,10 +25,10 @@ export default function MainPage() {
 	}, [fetchItems]);
 
 	return (
-		<div className="max-w-7xl mx-auto px-5">
+		<>
 			<FloatingNavbar />
 			{/*<AppSlider />*/}
 			<ItemsList items={items} />
-		</div>
+		</>
 	);
 }

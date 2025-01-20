@@ -1,10 +1,12 @@
 'use client';
+
 import React, {useEffect, useState} from 'react'
 import { Card, CardFooter, Button, Image } from '@nextui-org/react'
 import {CardBody} from "@nextui-org/card";
 import {Item, useItemsStore} from "@/store/useItemStore/useItemStore";
 import useAuthStore from "@/store/useAuthStore";
 import {useCartStore} from "@/store/useCartStore";
+import {toast} from "sonner";
 
 interface ItemCardProps {
 	item: Item;
@@ -25,7 +27,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
 			addToCart(user.id, item.id, 1);
 			setQuantity(1);
 		} else {
-			alert('Пожалуйста, войдите, чтобы добавить товар в корзину.');
+			toast.warning('Войдите, чтобы добавить товар в корзину.');
 		}
 	};
 

@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { toast } from 'sonner';
 import { fetchItems, createItem, updateItemById, deleteItemById } from '@/api/items';
 
 export type Item = {
@@ -27,10 +26,8 @@ export const useItemsStore = create<ItemState>((set, get) => ({
 		try {
 			const items = await fetchItems();
 			set({ items });
-			toast.success('Товары успешно загружены');
 		} catch (err) {
 			console.error(err);
-			toast.error('Ошибка загрузки товаров');
 		}
 	},
 
@@ -38,10 +35,8 @@ export const useItemsStore = create<ItemState>((set, get) => ({
 		try {
 			const newItem = await createItem(payload);
 			set((state) => ({ items: [newItem, ...state.items] }));
-			toast.success('Товар успешно создан');
 		} catch (err) {
 			console.error(err);
-			toast.error('Ошибка создания товара');
 		}
 	},
 
@@ -51,10 +46,8 @@ export const useItemsStore = create<ItemState>((set, get) => ({
 			set((state) => ({
 				items: state.items.map((item) => (item.id === id ? updatedItem : item)),
 			}));
-			toast.success('Товар успешно обновлён');
 		} catch (err) {
 			console.error(err);
-			toast.error('Ошибка обновления товара');
 		}
 	},
 
@@ -64,15 +57,12 @@ export const useItemsStore = create<ItemState>((set, get) => ({
 			set((state) => ({
 				items: state.items.filter((item) => item.id !== id),
 			}));
-			toast.success('Товар успешно удалён');
 		} catch (err) {
 			console.error(err);
-			toast.error('Ошибка удаления товара');
 		}
 	},
 
 	clearItems: () => {
 		set({ items: [] });
-		toast.info('Список товаров очищен');
 	},
 }));

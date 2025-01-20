@@ -4,7 +4,6 @@ import {Item} from "@/store/useItemStore/useItemStore";
 
 const supabase = createClient();
 
-// Получение всех товаров
 export const fetchItems = async (): Promise<Item[]> => {
 	const { data, error } = await supabase.from('items').select(`
     id,
@@ -22,7 +21,6 @@ export const fetchItems = async (): Promise<Item[]> => {
 	return data as Item[];
 };
 
-// Удаление товара по ID
 export const deleteItemById = async (itemId: number): Promise<void> => {
 	const { error } = await supabase.from('items').delete().eq('id', itemId);
 
@@ -35,7 +33,6 @@ export const deleteItemById = async (itemId: number): Promise<void> => {
 	toast.success('Товар успешно удалён');
 };
 
-// Обновление товара по ID
 export const updateItemById = async (payload: {
 	id: number;
 	category_id?: number;
@@ -69,7 +66,6 @@ export const updateItemById = async (payload: {
 	return data as Item;
 };
 
-// Создание нового товара
 export const createItem = async (payload: {
 	category_id: number;
 	name: string;
@@ -92,7 +88,6 @@ export const createItem = async (payload: {
 
 	if (error) {
 		console.error('Ошибка создания товара:', error.message);
-		toast.error(`Ошибка создания товара: ${error.message}`);
 		throw new Error(error.message || 'Не удалось создать товар');
 	}
 

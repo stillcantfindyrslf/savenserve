@@ -1,57 +1,27 @@
 "use client";
+
+import React from "react";
 import {
-	Avatar,
 	Button,
 	Dropdown,
 	DropdownItem,
 	DropdownMenu,
 	DropdownTrigger,
-	Link,
 	Navbar,
 	NavbarBrand,
 	NavbarContent,
-	NavbarItem,
-	Input, NavbarMenu, NavbarMenuItem, NavbarMenuToggle,
+	Input,
+	NavbarMenu,
+	NavbarMenuItem,
 } from "@nextui-org/react";
-import React from "react";
+import Link from 'next/link'
 import {PiShoppingCartSimpleBold} from "react-icons/pi";
 import {BiUser} from "react-icons/bi";
-import {RxHamburgerMenu} from "react-icons/rx";
-import {start} from "repl";
+import {RxCross2, RxHamburgerMenu} from "react-icons/rx";
+import {FiSearch} from "react-icons/fi";
 import useAuthStore from "@/store/useAuthStore";
 import AuthModal from "@/components/AuthModal";
-
-
-export const SearchIcon = ({size = 24, strokeWidth = 2, width, height, ...props}) => {
-	return (
-		<svg
-			aria-hidden="true"
-			fill="none"
-			focusable="false"
-			height={height || size}
-			role="presentation"
-			viewBox="0 0 24 24"
-			width={width || size}
-			className="text-color-text"
-			{...props}
-		>
-			<path
-				d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
-				stroke="currentColor"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				strokeWidth={strokeWidth}
-			/>
-			<path
-				d="M22 22L20 20"
-				stroke="currentColor"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				strokeWidth={strokeWidth}
-			/>
-		</svg>
-	);
-};
+import {toast} from "sonner";
 
 const menuItems = [
 	"Profile",
@@ -66,9 +36,33 @@ const menuItems = [
 	"Log Out",
 ];
 
-const FloatingNavbar = () => {
+interface NavbarProps {
+	title?: string;
+	subtitle?: boolean;
+	subtitleCart?: boolean;
+	showSearch?: boolean;
+	showCart?: boolean;
+	showUserMenu?: boolean;
+}
+
+const FloatingNavbar: React.FC<NavbarProps> = ({
+																								 title = "SaveNServe",
+																								 subtitle = true,
+																								 subtitleCart = false,
+																								 showSearch = true,
+																								 showCart = true,
+																								 showUserMenu = true,
+																							 }) => {
 	const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 	const {user, openAuthModal, handleLogout} = useAuthStore();
+
+	const handleCartClick = () => {
+		if (!user) {
+			toast.warning("Нужно войти, чтобы увидеть корзину.")
+			return;
+		}
+		window.location.href = "/cart";
+	};
 
 	return (
 		<div className="fixed top-0 left-0 right-0 h-auto bg-background-color z-50">
@@ -79,64 +73,88 @@ const FloatingNavbar = () => {
 					isMenuOpen={isMenuOpen}
 					onMenuOpenChange={setIsMenuOpen}
 				>
-					<RxHamburgerMenu size="24" className=" text-light-white-color cursor-pointer"
-													 onClick={() => setIsMenuOpen(!isMenuOpen)}/>
+					<RxHamburgerMenu
+						size="24"
+						className="text-light-white-color cursor-pointer"
+						onClick={() => setIsMenuOpen(!isMenuOpen)}
+					/>
 					<NavbarContent>
 						<NavbarBrand className="ml-2">
-							<p className="text-light-white-color font-bold text-2xl">SaveNServe</p>
+							<Link href="/">
+								<p className="text-light-white-color font-bold text-2xl">{title}</p>
+							</Link>
 						</NavbarBrand>
-						<div className="hidden sm:block w-full ml-8 mr-20">
-							<Input
-								isClearable
-								fullWidth="true"
-								placeholder="Искать Продукты, Овощи или Мясо..."
-								size="xl"
-								radius="full"
-								startContent={<SearchIcon size={18}/>}
-								type="search"
-							/>
-						</div>
-						<p className="text-light-white-color text-small max-w-42 whitespace-nowrap">
-							Заказывай и получи в <span className="text-secondary-color"> течении 15 мин!</span>
-						</p>
-						<Link href="/cart" passHref>
+						{showSearch && (
+							<div className="hidden sm:block w-full ml-8 mr-20">
+								<Input
+									isClearable
+									fullWidth="true"
+									placeholder="Искать Продукты, Овощи или Мясо..."
+									size="xl"
+									radius="full"
+									startContent={<FiSearch size={24} className="text-primary-color"/>}
+									type="search"
+								/>
+							</div>
+						)}
+						{subtitle && (
+							<p className="text-light-white-color text-small max-w-42 whitespace-nowrap">
+								Заказывай и получи <span className="text-secondary-color">в течении 15 мин!</span>
+							</p>
+						)}
+						{subtitleCart && (
+							<Link href="/" className="flex gap-3">
+								<p className="text-light-white-color text-md max-w-42 whitespace-nowrap">
+									Продолжить <span className="text-secondary-color">покупки</span>
+								</p>
+								<RxCross2 size={25} className="text-light-white-color"/>
+							</Link>
+						)}
+						{showCart && (
 							<Button
 								isIconOnly
 								className="bg-light-white-color text-black p-2.5 rounded-full shadow-lg hover:bg-gray-200"
 								aria-label="Shopping Cart"
+								onPress={handleCartClick}
 							>
 								<PiShoppingCartSimpleBold className="text-color-text" size={28}/>
 							</Button>
-						</Link>
-						<Dropdown placement="bottom-end">
-							<DropdownTrigger>
-								<Button
-									isIconOnly
-									className="bg-light-white-color text-black p-2.5 rounded-full shadow-lg hover:bg-gray-200"
-									aria-label="User"
+						)}
+						{showUserMenu && (
+							<Dropdown placement="bottom-end">
+								<DropdownTrigger>
+									<Button
+										isIconOnly
+										className="bg-light-white-color text-black p-2.5 rounded-full shadow-lg hover:bg-gray-200"
+										aria-label="User"
+									>
+										<BiUser className="text-color-text" size={28}/>
+									</Button>
+								</DropdownTrigger>
+								<DropdownMenu
+									className="text-gray-800"
+									aria-label="Profile Actions"
+									variant="flat"
 								>
-									<BiUser className="text-color-text" size={28}/>
-								</Button>
-							</DropdownTrigger>
-							<DropdownMenu className="text-gray-800" aria-label="Profile Actions" variant="flat">
-								{user ? (
-									<>
-										<DropdownItem key="user" className="h-14 gap-2">
-											<p className="font-semibold">Вошел как</p>
-											<p>{user.email}</p>
+									{user ? (
+										<>
+											<DropdownItem key="user" className="h-14 gap-2">
+												<p className="font-semibold">Вошел как</p>
+												<p>{user.email}</p>
+											</DropdownItem>
+											<DropdownItem key="logout" color="danger" onPress={handleLogout}>
+												Выйти
+											</DropdownItem>
+										</>
+									) : (
+										<DropdownItem key="login" onPress={openAuthModal}>
+											Войти
 										</DropdownItem>
-										<DropdownItem key="logout" color="danger" onPress={handleLogout}>
-											Выйти
-										</DropdownItem>
-									</>
-								) : (
-									<DropdownItem key="login" onPress={openAuthModal}>
-										Войти
-									</DropdownItem>
-								)}
-								<DropdownItem href="/admin">Админ панель</DropdownItem>
-							</DropdownMenu>
-						</Dropdown>
+									)}
+									<DropdownItem href="/admin">Админ панель</DropdownItem>
+								</DropdownMenu>
+							</Dropdown>
+						)}
 					</NavbarContent>
 					<NavbarMenu>
 						{menuItems.map((item, index) => (

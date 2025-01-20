@@ -4,6 +4,7 @@ import "./globals.css";
 import {NextUIProvider} from "@nextui-org/react";
 import useAuthStore from "@/store/useAuthStore";
 import {useEffect} from "react";
+import {Toaster} from "sonner";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -41,7 +42,10 @@ export default function RootLayout({
 				className={`${montserrat.variable}`}
 			>
 				<NextUIProvider>
-					{children}
+					<Toaster position='top-center' richColors />
+					<div className="max-w-7xl mx-auto px-5">
+						{children}
+					</div>
 				</NextUIProvider>
 			</body>
 		</html>
