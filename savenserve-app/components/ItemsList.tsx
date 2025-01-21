@@ -1,7 +1,6 @@
-import React, {FC, useEffect} from 'react';
-import { Spinner } from '@nextui-org/react';
+import React, {FC} from 'react';
 import ItemCard from './ItemCard';
-import {Item, useItemsStore} from "@/store/useItemStore/useItemStore";
+import {Item} from "@/store/useItemStore/useItemStore";
 
 interface ItemCardProps {
 	items: Item[];
@@ -9,7 +8,7 @@ interface ItemCardProps {
 
 const ItemsList: FC<ItemCardProps> = ({ items }) => {
 	return (
-		<div className="mt-32 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+		<div className="mt-32 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
 			{items.map((item) => (
 				<ItemCard
 					key={item.id}

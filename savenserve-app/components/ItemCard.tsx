@@ -1,12 +1,12 @@
 'use client';
 
-import React, {useEffect, useState} from 'react'
-import { Card, CardFooter, Button, Image } from '@nextui-org/react'
-import {CardBody} from "@nextui-org/card";
-import {Item, useItemsStore} from "@/store/useItemStore/useItemStore";
-import useAuthStore from "@/store/useAuthStore";
-import {useCartStore} from "@/store/useCartStore";
-import {toast} from "sonner";
+import React, { useEffect, useState } from 'react';
+import { Card, CardBody, CardFooter, Image, useDisclosure } from '@nextui-org/react';
+import { Item } from '@/store/useItemStore/useItemStore';
+import useAuthStore from '@/store/useAuthStore';
+import { useCartStore } from '@/store/useCartStore';
+import { toast } from 'sonner';
+import ItemModal from '@/components/ModalDetailItem';
 
 interface ItemCardProps {
 	item: Item;
@@ -14,8 +14,9 @@ interface ItemCardProps {
 
 const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
 	const { user } = useAuthStore();
-	const { cartItems, addToCart, updateCartItem, fetchCartItems } = useCartStore();
+	const { cartItems, addToCart, updateCartItem } = useCartStore();
 	const [quantity, setQuantity] = useState(0);
+	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	useEffect(() => {
 		const cartItem = cartItems.find((cartItem) => cartItem.item.id === item.id);
@@ -31,19 +32,28 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
 		}
 	};
 
-	const handleUpdateQuantity = (newQuantity) => {
-		const cartItem = cartItems.find((cartItem) => cartItem.item.id === item.id);
-		if (cartItem) {
-			updateCartItem(cartItem.id, newQuantity);
+	const handleUpdateQuantity = (e: React.MouseEvent, newQuantity: number) => {
+		e.stopPropagation();
+		if (newQuantity > 0) {
+			const cartItem = cartItems.find((cartItem) => cartItem.item.id === item.id);
+			if (cartItem) {
+				updateCartItem(cartItem.id, newQuantity);
+			}
+			setQuantity(newQuantity);
+		} else {
+			setQuantity(0);
 		}
-		setQuantity(newQuantity);
 	};
 
 	return (
+		<>
 			<Card
-				className="max-w-xs p-3"
+				isPressable
+				disableRipple
+				className="max-w-xs p-3 hover:shadow-lg transition-shadow duration-300 ease-in-out"
 				shadow="none"
 				key={item.id}
+				onClick={onOpen}
 			>
 				<CardBody>
 					<Image
@@ -56,30 +66,43 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
 					<div className="flex flex-col items-center mt-4 text-center">
 						<h3 className="font-semibold text-lg text-color-text leading-4 line-clamp-2">{item.name}</h3>
 						<p className="text-sm text-gray-700 leading-4 line-clamp-2 mt-2">{item.description}</p>
-						<p className="text-3xl font-bold text-color-text mt-2">
-							{item.price} р.
-						</p>
+						<p className="text-3xl font-bold text-color-text mt-2">{item.price} р.</p>
 					</div>
 				</CardBody>
 				<CardFooter>
 					{quantity === 0 ? (
-						<Button fullWidth className="bg-light-secondary-color text-color-text font-semibold" onPress={handleAddToCart}>Добавить в корзину</Button>
+						<button
+							className="w-full py-3 bg-light-secondary-color text-color-text font-semibold rounded-xl hover:bg-secondary-color transition-all"
+							onClick={(e) => {
+								e.stopPropagation();
+								handleAddToCart();
+							}}
+						>
+							Добавить в корзину
+						</button>
 					) : (
-						<div className="mx-auto flex items-center text-2xl text-color-text gap-4">
-							<Button
-								className="bg-light-secondary-color text-3xl text-color-text"
-								onPress={() => handleUpdateQuantity(quantity - 1)}
-								disabled={quantity <= 1}
+						<div className="mx-auto flex items-center text-3xl text-color-text gap-5">
+							<button
+								className="w-12 h-12 flex items-center justify-center bg-light-secondary-color text-3xl text-color-text rounded-full hover:bg-secondary-color transition-all"
+								onClick={(e) => handleUpdateQuantity(e, quantity - 1)}
 							>
-								-
-							</Button>
+								&#8722;
+							</button>
 							<span>{quantity}</span>
-							<Button className="bg-light-secondary-color text-3xl text-color-text" onPress={() => handleUpdateQuantity(quantity + 1)}>+</Button>
+							<button
+								className="w-12 h-12 flex items-center justify-center bg-light-secondary-color text-3xl text-color-text rounded-full hover:bg-secondary-color transition-all"
+								onClick={(e) => handleUpdateQuantity(e, quantity + 1)}
+							>
+								+
+							</button>
 						</div>
 					)}
 				</CardFooter>
 			</Card>
-	);
-}
 
-export default ItemCard
+			<ItemModal isOpen={isOpen} onOpenChange={onClose} item={item} />
+		</>
+	);
+};
+
+export default ItemCard;
