@@ -1,19 +1,24 @@
 'use client';
 
-import AppSlider from "@/components/AppSlider";
 import FloatingNavbar from "@/components/molecules/FloatingNavbar";
 import ItemsList from "@/components/ItemsList";
 import { useItemsStore } from "@/store/useItemStore/useItemStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { fetchItems } from "@/api/items";
-import useAuthStore from "@/store/useAuthStore";
 
 export default function MainPage() {
 	const { items, fetchItems } = useItemsStore();
+	const [searchQuery, setSearchQuery] = useState("");
+	const [filteredItems, setFilteredItems] = useState(items);
 
 	useEffect(() => {
+		const filtered = items.filter((item) =>
+			item.name.toLowerCase().includes(searchQuery.toLowerCase())
+		);
+		setFilteredItems(filtered);
+	}, [searchQuery, items]);
 
+	useEffect(() => {
 		const loadData = async () => {
 			try {
 				await fetchItems();
@@ -26,9 +31,8 @@ export default function MainPage() {
 
 	return (
 		<>
-			<FloatingNavbar />
-			{/*<AppSlider />*/}
-			<ItemsList items={items} />
+			<FloatingNavbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+			<ItemsList items={filteredItems} />
 		</>
 	);
 }

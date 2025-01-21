@@ -65,7 +65,7 @@ const Cart = () => {
 											onPress={() => handleQuantityChange(id, quantity - 1)}
 											disabled={quantity <= 1}
 										>
-											-
+											&#8722;
 										</Button>
 										<span>{quantity}</span>
 										<Button className="bg-light-secondary-color border-2 border-primary-color text-3xl text-color-text"

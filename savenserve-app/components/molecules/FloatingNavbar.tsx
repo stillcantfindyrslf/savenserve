@@ -43,6 +43,8 @@ interface NavbarProps {
 	showSearch?: boolean;
 	showCart?: boolean;
 	showUserMenu?: boolean;
+	searchQuery: string;
+	setSearchQuery: (query: string) => void;
 }
 
 const FloatingNavbar: React.FC<NavbarProps> = ({
@@ -52,6 +54,8 @@ const FloatingNavbar: React.FC<NavbarProps> = ({
 																								 showSearch = true,
 																								 showCart = true,
 																								 showUserMenu = true,
+																								 searchQuery,
+																								 setSearchQuery
 																							 }) => {
 	const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 	const {user, openAuthModal, handleLogout} = useAuthStore();
@@ -94,6 +98,9 @@ const FloatingNavbar: React.FC<NavbarProps> = ({
 									radius="full"
 									startContent={<FiSearch size={24} className="text-primary-color"/>}
 									type="search"
+									value={searchQuery}
+									onChange={(e) => {setSearchQuery(e.target.value)}}
+									onClear={() => setSearchQuery("")}
 								/>
 							</div>
 						)}
