@@ -4,7 +4,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {useCartStore} from '@/store/useCartStore';
 import useAuthStore from '@/store/useAuthStore';
 import {Button, RadioGroup, Radio, Divider, Image, Spinner} from '@nextui-org/react';
-import FloatingNavbar from "@/components/molecules/FloatingNavbar";
+import FloatingNavbar from "@/components/FloatingNavbar";
 import {FaRegTrashCan} from "react-icons/fa6";
 
 const Cart = () => {

@@ -1,10 +1,10 @@
 'use client';
 
-import FloatingNavbar from "@/components/molecules/FloatingNavbar";
+import FloatingNavbar from "@/components/FloatingNavbar";
 import ItemsList from "@/components/ItemsList";
-import { useItemsStore } from "@/store/useItemStore/useItemStore";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import {useItemsStore} from "@/store/useItemStore/useItemStore";
 
 export default function MainPage() {
 	const { items, fetchItems } = useItemsStore();

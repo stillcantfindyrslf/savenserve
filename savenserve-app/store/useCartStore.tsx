@@ -5,9 +5,11 @@ const supabase = createClient();
 
 export const useCartStore = create((set, get) => ({
 	cartItems: [],
-	cartId: null, // Стейт для хранения cartId пользователя
+	cartId: null, // Хранит ID корзины
+	isLoading: false,
 
-	initCart: async (userId: string) => {
+	// Инициализация корзины
+	initCart: async (userId) => {
 		const { data: cartData, error: cartError } = await supabase
 			.from('cart')
 			.select('id')
@@ -20,12 +22,12 @@ export const useCartStore = create((set, get) => ({
 		}
 
 		if (cartData) {
-			// Корзина уже существует
+			// Если корзина уже существует
 			set({ cartId: cartData.id });
 			return cartData.id;
 		}
 
-		// Создаем новую корзину для пользователя
+		// Создаем новую корзину
 		const { data: newCart, error: newCartError } = await supabase
 			.from('cart')
 			.insert([{ user_id: userId }])
@@ -41,21 +43,23 @@ export const useCartStore = create((set, get) => ({
 		return newCart.id;
 	},
 
-	fetchCartItems: async (userId: string) => {
+	// Получение товаров в корзине
+	fetchCartItems: async (userId) => {
+		set({ isLoading: true });
 		let cartId = get().cartId;
 
 		if (!cartId) {
-			// Если cartId отсутствует, инициализируем корзину
 			cartId = await get().initCart(userId);
 			if (!cartId) {
 				console.error('Failed to initialize cart');
+				set({ isLoading: false });
 				return;
 			}
 		}
 
 		const { data, error } = await supabase
 			.from('cart_items')
-			.select('id, quantity, item:items(*)') // Замените на актуальные поля таблицы
+			.select('id, quantity, item:items(*)') // Обновите, если структура отличается
 			.eq('cart_id', cartId);
 
 		if (error) {
@@ -63,14 +67,14 @@ export const useCartStore = create((set, get) => ({
 		} else {
 			set({ cartItems: data || [] });
 		}
+		set({ isLoading: false });
 	},
 
-	// Добавляем товар в корзину
-	addToCart: async (userId: string, itemId: number, quantity = 1) => {
+	// Добавление товара в корзину
+	addToCart: async (userId, itemId, quantity = 1) => {
 		let cartId = get().cartId;
 
 		if (!cartId) {
-			// Если cartId отсутствует, инициализируем корзину
 			cartId = await get().initCart(userId);
 			if (!cartId) {
 				console.error('Failed to initialize cart');
@@ -78,6 +82,14 @@ export const useCartStore = create((set, get) => ({
 			}
 		}
 
+		// Проверка: если товар уже в корзине, увеличиваем количество
+		const existingItem = get().cartItems.find((item) => item.item.id === itemId);
+		if (existingItem) {
+			await get().updateCartItem(existingItem.id, existingItem.quantity + quantity);
+			return;
+		}
+
+		// Добавляем новый товар
 		const { data, error } = await supabase
 			.from('cart_items')
 			.insert([{ cart_id: cartId, item_id: itemId, quantity }])
@@ -87,30 +99,18 @@ export const useCartStore = create((set, get) => ({
 			console.error('Error adding to cart:', error);
 		} else {
 			set((state) => ({
-				cartItems: [...state.cartItems, { ...data[0], item: { id: itemId } }],
+				cartItems: [...state.cartItems, { ...data[0], item: { id: itemId, ...data[0].item } }],
 			}));
 		}
 	},
 
-	updateCartItem: async (cartItemId: number, quantity: number) => {
+	// Обновление количества товара
+	updateCartItem: async (cartItemId, quantity) => {
 		if (quantity <= 0) {
-			// Если количество 0 или меньше, удаляем товар из корзины
-			const { error } = await supabase
-				.from('cart_items')
-				.delete()
-				.eq('id', cartItemId);
-
-			if (error) {
-				console.error('Error removing item from cart:', error);
-			} else {
-				set((state) => ({
-					cartItems: state.cartItems.filter((item) => item.id !== cartItemId),
-				}));
-			}
-			return; // Завершаем выполнение функции
+			await get().removeFromCart(cartItemId);
+			return;
 		}
 
-		// Если количество больше 0, обновляем товар
 		const { error } = await supabase
 			.from('cart_items')
 			.update({ quantity })
@@ -127,8 +127,8 @@ export const useCartStore = create((set, get) => ({
 		}
 	},
 
-	// Удаляем товар из корзины
-	removeFromCart: async (cartItemId: number) => {
+	// Удаление товара из корзины
+	removeFromCart: async (cartItemId) => {
 		const { error } = await supabase
 			.from('cart_items')
 			.delete()
@@ -140,6 +140,24 @@ export const useCartStore = create((set, get) => ({
 			set((state) => ({
 				cartItems: state.cartItems.filter((item) => item.id !== cartItemId),
 			}));
+		}
+	},
+
+	// Очистка корзины
+	clearCart: async () => {
+		const cartId = get().cartId;
+
+		if (!cartId) return;
+
+		const { error } = await supabase
+			.from('cart_items')
+			.delete()
+			.eq('cart_id', cartId);
+
+		if (error) {
+			console.error('Error clearing cart:', error);
+		} else {
+			set({ cartItems: [] });
 		}
 	},
 }));

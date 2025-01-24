@@ -1,12 +1,11 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Card, CardBody, CardFooter, Image, useDisclosure } from '@nextui-org/react';
 import { Item } from '@/store/useItemStore/useItemStore';
 import useAuthStore from '@/store/useAuthStore';
 import { useCartStore } from '@/store/useCartStore';
 import { toast } from 'sonner';
-import ItemModal from '@/components/ModalDetailItem';
+import ItemDetailModal from "@/components/ModalDetailItem";
+import {useLikeStore} from "@/store/useLikesStore";
 
 interface ItemCardProps {
 	item: Item;
@@ -15,18 +14,15 @@ interface ItemCardProps {
 const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
 	const { user } = useAuthStore();
 	const { cartItems, addToCart, updateCartItem } = useCartStore();
-	const [quantity, setQuantity] = useState(0);
 	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { isLiked, toggleLike } = useLikeStore();
 
-	useEffect(() => {
-		const cartItem = cartItems.find((cartItem) => cartItem.item.id === item.id);
-		setQuantity(cartItem ? cartItem.quantity : 0);
-	}, [cartItems, item.id]);
+	const cartItem = cartItems.find((cartItem) => cartItem.item.id === item.id);
+	const quantity = cartItem ? cartItem.quantity : 0;
 
 	const handleAddToCart = () => {
 		if (user) {
 			addToCart(user.id, item.id, 1);
-			setQuantity(1);
 		} else {
 			toast.warning('Войдите, чтобы добавить товар в корзину.');
 		}
@@ -34,14 +30,19 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
 
 	const handleUpdateQuantity = (e: React.MouseEvent, newQuantity: number) => {
 		e.stopPropagation();
-		if (newQuantity > 0) {
-			const cartItem = cartItems.find((cartItem) => cartItem.item.id === item.id);
-			if (cartItem) {
-				updateCartItem(cartItem.id, newQuantity);
-			}
-			setQuantity(newQuantity);
+		if (cartItem) {
+			updateCartItem(cartItem.id, newQuantity);
+		} else if (newQuantity > 0 && user) {
+			addToCart(user.id, item.id, newQuantity);
+		}
+	};
+
+	const handleToggleLike = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		if (user) {
+			toggleLike(user.id, item.id);
 		} else {
-			setQuantity(0);
+			toast.warning('Войдите, чтобы лайкнуть товар.');
 		}
 	};
 
@@ -70,6 +71,16 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
 					</div>
 				</CardBody>
 				<CardFooter>
+					<button
+						className={`ml-4 w-12 h-12 flex items-center justify-center rounded-full transition-all ${
+							isLiked(item.id)
+								? 'bg-red-500 text-white hover:bg-red-600'
+								: 'bg-gray-200 text-gray-500 hover:bg-gray-300'
+						}`}
+						onClick={handleToggleLike}
+					>
+						{isLiked(item.id) ? '❤️' : '🤍'}
+					</button>
 					{quantity === 0 ? (
 						<button
 							className="w-full py-3 bg-light-secondary-color text-color-text font-semibold rounded-xl hover:bg-secondary-color transition-all"
@@ -100,7 +111,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
 				</CardFooter>
 			</Card>
 
-			<ItemModal isOpen={isOpen} onOpenChange={onClose} item={item} />
+			<ItemDetailModal isOpen={isOpen} onOpenChange={onClose} item={item} />
 		</>
 	);
 };

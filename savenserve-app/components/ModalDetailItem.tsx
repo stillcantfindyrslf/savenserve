@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import {Modal, Image, Button, ModalBody, ModalFooter, ModalHeader} from '@nextui-org/react';
 import {Item} from '@/store/useItemStore/useItemStore';
@@ -12,14 +10,14 @@ interface ItemModalProps {
 	item: Item;
 }
 
-const ItemModal: React.FC<ItemModalProps> = ({isOpen, onOpenChange, item}) => {
+const ItemDetailModal: React.FC<ItemModalProps> = ({isOpen, onOpenChange, item}) => {
 	return (
 		<Modal
 			isOpen={isOpen}
 			onClose={onOpenChange}
 			aria-labelledby="modal-title"
 			className="max-w-3xl"
-			closeButton={<div><IoCloseOutline className="h-8 w-8" onClick={() => close()} /></div>}
+			closeButton={<div><IoCloseOutline className="h-8 w-8" onClick={onOpenChange} /></div>}
 		>
 			<ModalContent>
 				<ModalHeader>
@@ -53,4 +51,4 @@ const ItemModal: React.FC<ItemModalProps> = ({isOpen, onOpenChange, item}) => {
 	);
 };
 
-export default ItemModal;
+export default ItemDetailModal;
