@@ -1,28 +1,32 @@
-import { create } from "zustand";
-import {addLike, getLikedItems, removeLike} from "@/api/likes";
+import { create } from 'zustand';
+import { addLike, getLikedItems, removeLike } from '@/api/likes';
 
 interface LikeState {
-	likedItems: number[]; // Список ID лайкнутых товаров
+	likedItems: number[];
 	isLoading: boolean;
+	isLoaded: boolean;
 	error: string | null;
 
-	fetchLikedItems: (userId: string) => Promise<void>;
-	toggleLike: (userId: string, itemId: number) => Promise<void>;
+	fetchLikedItems: (userId: string) => void;
+	toggleLike: (userId: string, itemId: number) => void;
 	isLiked: (itemId: number) => boolean;
 }
 
 export const useLikeStore = create<LikeState>((set, get) => ({
 	likedItems: [],
 	isLoading: false,
+	isLoaded: false,
 	error: null,
 
 	fetchLikedItems: async (userId: string) => {
-		set({ isLoading: true, error: null });
+		const { isLoaded } = get();
+		if (isLoaded) return;
+
 		try {
 			const likedItems = await getLikedItems(userId);
-			set({ likedItems: [...new Set(likedItems)], isLoading: false }); // Убираем дубли
-		} catch (error) {
-			set({ error: 'Ошибка при загрузке лайков', isLoading: false });
+			set({ likedItems: [...new Set(likedItems)], isLoaded: true });
+		} catch (err) {
+			console.error('Ошибка при загрузке лайков:', err);
 		}
 	},
 
@@ -37,12 +41,11 @@ export const useLikeStore = create<LikeState>((set, get) => ({
 				set({ likedItems: [...likedItems, itemId] });
 			}
 		} catch (error) {
-			set({ error: 'Ошибка при переключении лайка' });
+			console.error('Ошибка при переключении лайка', error);
 		}
 	},
 
 	isLiked: (itemId: number) => {
-		const { likedItems } = get();
-		return likedItems.includes(itemId);
+		return get().likedItems.includes(itemId);
 	},
 }));

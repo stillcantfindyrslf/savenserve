@@ -1,23 +1,12 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import useAuthStore from '@/store/useAuthStore';
+import React from 'react';
 import ItemCard from '@/components/ItemCard';
 import {useLikeStore} from "@/store/useLikesStore";
 import {useItemsStore} from "@/store/useItemStore/useItemStore";
 const Favorites: React.FC = () => {
-	const { user } = useAuthStore();
-	const { likedItems, fetchLikedItems, isLoading } = useLikeStore();
-	const { items, fetchItems } = useItemsStore();
-
-	useEffect(() => {
-		if (user) {
-			fetchLikedItems(user.id);
-			if (!items.length) {
-				fetchItems();
-			}
-		}
-	}, [user]);
+	const { likedItems, isLoading } = useLikeStore();
+	const { items } = useItemsStore();
 
 	const favoriteItems = items.filter((item) => likedItems.includes(item.id));
 

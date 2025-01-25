@@ -1,10 +1,12 @@
 'use client';
+
 import {Geist, Geist_Mono, Montserrat} from "next/font/google";
 import "./globals.css";
 import {NextUIProvider} from "@nextui-org/react";
 import useAuthStore from "@/store/useAuthStore";
 import {useEffect} from "react";
 import {Toaster} from "sonner";
+import StoreInitializer from "@/store/StoreInitializer";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -43,6 +45,7 @@ export default function RootLayout({
 			>
 				<NextUIProvider>
 					<Toaster position='top-center' richColors />
+					<StoreInitializer />
 					<div className="max-w-7xl mx-auto px-5">
 						{children}
 					</div>

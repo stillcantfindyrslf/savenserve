@@ -149,6 +149,7 @@ const FloatingNavbar: React.FC<NavbarProps> = ({
 												<p className="font-semibold">Вошел как</p>
 												<p>{user.email}</p>
 											</DropdownItem>
+											<DropdownItem href="/favorites">Понравившееся</DropdownItem>
 											<DropdownItem href="/admin">Админ панель</DropdownItem>
 											<DropdownItem key="logout" color="danger" onPress={handleLogout}>
 												Выйти

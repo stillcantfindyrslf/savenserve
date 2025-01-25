@@ -5,7 +5,6 @@ import useAuthStore from '@/store/useAuthStore';
 import { useCartStore } from '@/store/useCartStore';
 import { toast } from 'sonner';
 import ItemDetailModal from "@/components/ModalDetailItem";
-import {useLikeStore} from "@/store/useLikesStore";
 
 interface ItemCardProps {
 	item: Item;
@@ -15,7 +14,6 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
 	const { user } = useAuthStore();
 	const { cartItems, addToCart, updateCartItem } = useCartStore();
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const { isLiked, toggleLike } = useLikeStore();
 
 	const cartItem = cartItems.find((cartItem) => cartItem.item.id === item.id);
 	const quantity = cartItem ? cartItem.quantity : 0;
@@ -34,15 +32,6 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
 			updateCartItem(cartItem.id, newQuantity);
 		} else if (newQuantity > 0 && user) {
 			addToCart(user.id, item.id, newQuantity);
-		}
-	};
-
-	const handleToggleLike = (e: React.MouseEvent) => {
-		e.stopPropagation();
-		if (user) {
-			toggleLike(user.id, item.id);
-		} else {
-			toast.warning('Войдите, чтобы лайкнуть товар.');
 		}
 	};
 
@@ -71,16 +60,6 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
 					</div>
 				</CardBody>
 				<CardFooter>
-					<button
-						className={`ml-4 w-12 h-12 flex items-center justify-center rounded-full transition-all ${
-							isLiked(item.id)
-								? 'bg-red-500 text-white hover:bg-red-600'
-								: 'bg-gray-200 text-gray-500 hover:bg-gray-300'
-						}`}
-						onClick={handleToggleLike}
-					>
-						{isLiked(item.id) ? '❤️' : '🤍'}
-					</button>
 					{quantity === 0 ? (
 						<button
 							className="w-full py-3 bg-light-secondary-color text-color-text font-semibold rounded-xl hover:bg-secondary-color transition-all"
@@ -111,7 +90,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
 				</CardFooter>
 			</Card>
 
-			<ItemDetailModal isOpen={isOpen} onOpenChange={onClose} item={item} />
+			<ItemDetailModal isOpen={isOpen} onOpenChange={onClose} item={item} user={user} />
 		</>
 	);
 };

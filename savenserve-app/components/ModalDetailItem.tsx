@@ -3,14 +3,26 @@ import {Modal, Image, Button, ModalBody, ModalFooter, ModalHeader} from '@nextui
 import {Item} from '@/store/useItemStore/useItemStore';
 import {ModalContent} from "@nextui-org/modal";
 import {IoCloseOutline} from "react-icons/io5";
+import {useLikeStore} from "@/store/useLikesStore";
+import {FaHeart} from "react-icons/fa6";
 
 interface ItemModalProps {
 	isOpen: boolean;
 	onOpenChange: () => void;
 	item: Item;
+	user: { id: string } | null;
 }
 
-const ItemDetailModal: React.FC<ItemModalProps> = ({isOpen, onOpenChange, item}) => {
+const ItemDetailModal: React.FC<ItemModalProps> = ({isOpen, onOpenChange, item, user}) => {
+	const { toggleLike, isLiked } = useLikeStore();
+	const liked = isLiked(item.id);
+
+	const handleLikeToggle = () => {
+		if (user) {
+			toggleLike(user.id, item.id);
+		}
+	};
+
 	return (
 		<Modal
 			isOpen={isOpen}
@@ -35,7 +47,18 @@ const ItemDetailModal: React.FC<ItemModalProps> = ({isOpen, onOpenChange, item})
 							objectFit="cover"
 						/>
 						<div className="flex flex-col">
-							<p className="text-2xl font-semibold text-gray-700 mb-4">{item.name}</p>
+							<div className="flex items-start gap-4">
+								<p className="text-2xl py-3 font-semibold text-gray-700">{item.name}</p>
+								<button
+									className="flex h-13 w-13 p-3 rounded-full hover:bg-gray-100"
+									onClick={handleLikeToggle}
+								>
+									<FaHeart
+										size={30}
+										className={`${liked ? 'text-red-500' : 'text-gray-300'}`}
+									/>
+								</button>
+							</div>
 							<p className="text-md text-gray-700 mb-4">{item.description}</p>
 							<p className="text-3xl font-bold text-color-text">{item.price} р.</p>
 						</div>

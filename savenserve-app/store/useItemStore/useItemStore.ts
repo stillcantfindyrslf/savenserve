@@ -12,6 +12,8 @@ export type Item = {
 
 type ItemState = {
 	items: Item[];
+	isLoaded: boolean;
+	isLoading: boolean;
 	fetchItems: () => Promise<void>;
 	createItem: (payload: Omit<Item, 'id'>) => Promise<void>;
 	updateItem: (id: number, updatedData: Partial<Item>) => Promise<void>;
@@ -21,13 +23,22 @@ type ItemState = {
 
 export const useItemsStore = create<ItemState>((set, get) => ({
 	items: [],
+	isLoaded: false,
+	isLoading: false,
 
 	fetchItems: async () => {
+		const { isLoaded, isLoading } = get();
+
+		if (isLoaded || isLoading) return;
+
+		set({ isLoading: true });
+
 		try {
 			const items = await fetchItems();
-			set({ items });
+			set({ items, isLoaded: true, isLoading: false });
 		} catch (err) {
-			console.error(err);
+			console.error('Ошибка при загрузке товаров:', err);
+			set({ isLoading: false });
 		}
 	},
 
@@ -36,7 +47,7 @@ export const useItemsStore = create<ItemState>((set, get) => ({
 			const newItem = await createItem(payload);
 			set((state) => ({ items: [newItem, ...state.items] }));
 		} catch (err) {
-			console.error(err);
+			console.error('Ошибка при создании товара:', err);
 		}
 	},
 
@@ -47,7 +58,7 @@ export const useItemsStore = create<ItemState>((set, get) => ({
 				items: state.items.map((item) => (item.id === id ? updatedItem : item)),
 			}));
 		} catch (err) {
-			console.error(err);
+			console.error('Ошибка при обновлении товара:', err);
 		}
 	},
 
@@ -58,11 +69,11 @@ export const useItemsStore = create<ItemState>((set, get) => ({
 				items: state.items.filter((item) => item.id !== id),
 			}));
 		} catch (err) {
-			console.error(err);
+			console.error('Ошибка при удалении товара:', err);
 		}
 	},
 
 	clearItems: () => {
-		set({ items: [] });
+		set({ items: [], isLoaded: false });
 	},
 }));
