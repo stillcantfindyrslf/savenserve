@@ -12,14 +12,14 @@ const ItemsList: FC<ItemCardProps> = ({ items }) => {
 
 	if (isLoading) {
 		return (
-			<div className="flex justify-center items-center mt-32">
+			<div className="flex justify-center items-center">
 				<Spinner />
 			</div>
 		);
 	}
 
 	return (
-		<div className="mt-32 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+		<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2">
 			{items.map((item) => (
 				<ItemCard
 					key={item.id}

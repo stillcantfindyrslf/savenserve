@@ -3,18 +3,14 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Input} from '@nextui-org/react';
 import { useItemsStore } from '@/store/useItemStore/useItemStore';
-import CreateItemModal from "@/components/CreateItemModal";
+import CreateItemModal from "./CreateItemModal";
 import {useAdminStore} from "@/store/useAdminStore";
 
 const AdminPanel = () => {
-	const { items, fetchItems, deleteItem } = useItemsStore();
+	const { items, deleteItem } = useItemsStore();
 	const { openModal, closeModal, currentItem, setCurrentItem } = useAdminStore();
 	const [searchQuery, setSearchQuery] = useState('');
 	const [filteredItems, setFilteredItems] = useState(items);
-
-	useEffect(() => {
-		fetchItems();
-	}, []);
 
 	useEffect(() => {
 		setFilteredItems(

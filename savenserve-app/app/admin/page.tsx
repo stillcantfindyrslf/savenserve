@@ -1,4 +1,5 @@
-import AdminItems from "@/components/AdminItems";
+import AdminItems from "@/components/AdminPanel/AdminItems";
+
 
 export default function Admin() {
 	return (

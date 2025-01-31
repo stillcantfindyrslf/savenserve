@@ -2,11 +2,14 @@
 
 import FloatingNavbar from "@/components/FloatingNavbar";
 import ItemsList from "@/components/ItemsList";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import {useItemsStore} from "@/store/useItemStore/useItemStore";
+import SidebarCategory from "@/components/SidebarCategory";
+import {useCategoriesStore} from "@/store/useCategoriesStore";
 
 export default function MainPage() {
-	const { items } = useItemsStore();
+	const {items} = useItemsStore();
+	const {categories} = useCategoriesStore();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [filteredItems, setFilteredItems] = useState(items);
 
@@ -19,8 +22,15 @@ export default function MainPage() {
 
 	return (
 		<>
-			<FloatingNavbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-			<ItemsList items={filteredItems} />
+			<FloatingNavbar searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
+			<div className="flex mt-32">
+				<div className="w-1/4 pr-4">
+					<SidebarCategory categories={categories}/>
+				</div>
+				<div className="w-3/4">
+					<ItemsList items={filteredItems}/>
+				</div>
+			</div>
 		</>
 	);
 }
