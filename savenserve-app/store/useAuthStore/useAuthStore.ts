@@ -8,14 +8,18 @@ const supabase = createClient();
 const useAuthStore = create<AuthState>((set, get) => ({
 	isAuthModalOpen: false,
 	user: null,
+	email: '',
+	password: '',
 	loading: false,
 	error: '',
 	isLogin: true,
 
 	openAuthModal: () => set({ isAuthModalOpen: true }),
 	closeAuthModal: () => set({ isAuthModalOpen: false, error: '', isLogin: true }),
-
 	toggleAuthMode: () => set((state) => ({ isLogin: !state.isLogin })),
+
+	setEmail: (email) => set({ email }),
+	setPassword: (password) => set({ password }),
 
 	handleAuth: async (email: string, password: string) => {
 		set({ loading: true, error: '' });
@@ -53,6 +57,25 @@ const useAuthStore = create<AuthState>((set, get) => ({
 			set({ user: session?.user || null });
 		});
 	},
+
+	signInWithGoogle: async () => {
+		set({ loading: true, error: null });
+		try {
+			const { error } = await supabase.auth.signInWithOAuth({
+				provider: 'google',
+				options: {
+					redirectTo: window.location.origin,
+				},
+			});
+			if (error) throw error;
+		} catch (err) {
+			set({ error: err.message });
+		} finally {
+			set({ loading: false });
+		}
+	},
+
+	setUser: (user) => set({ user }),
 }));
 
 export default useAuthStore;
