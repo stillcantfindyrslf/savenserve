@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardBody, CardFooter, Image, useDisclosure } from '@nextui-org/react';
-import { Item } from '@/store/useItemStore/useItemStore';
+import { Item } from '@/store/useItemStore/types';
 import useAuthStore from '@/store/useAuthStore';
 import { useCartStore } from '@/store/useCartStore';
 import { toast } from 'sonner';
@@ -47,7 +47,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
 			>
 				<CardBody>
 					<Image
-						src={item.image || '/placeholder-image.jpg'}
+						src={item.images && item.images.length > 0 ? item.images[0] : '/placeholder-image.jpg'}
 						alt={item.name}
 						width="100%"
 						height={200}

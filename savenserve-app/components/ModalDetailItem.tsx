@@ -1,6 +1,6 @@
 import React from 'react';
 import {Modal, Image, Button, ModalBody, ModalFooter, ModalHeader} from '@nextui-org/react';
-import {Item} from '@/store/useItemStore/useItemStore';
+import { Item } from '@/store/useItemStore/types';
 import {ModalContent} from "@nextui-org/modal";
 import {IoCloseOutline} from "react-icons/io5";
 import {useLikeStore} from "@/store/useLikesStore";
@@ -61,6 +61,14 @@ const ItemDetailModal: React.FC<ItemModalProps> = ({isOpen, onOpenChange, item, 
 							</div>
 							<p className="text-md text-gray-700 mb-4">{item.description}</p>
 							<p className="text-3xl font-bold text-color-text">{item.price} р.</p>
+							<p className="text-md text-gray-700">Адрес: {item.address || 'Не указано'}</p>
+							<p className="text-md text-gray-700">Срок годности: {item.best_before || 'Не указано'}</p>
+							<p className="text-md text-gray-700">Бренд: {item.brand || 'Не указано'}</p>
+							<p className="text-md text-gray-700">Страна производства: {item.country_of_origin || 'Не указано'}</p>
+							<p className="text-md text-gray-700">Информация: {item.information || 'Не указано'}</p>
+							<p className="text-md text-gray-700">Обычная цена: {item.normal_price || 'Не указано'}</p>
+							<p className="text-md text-gray-700">Цена за кг: {item.price_per_kg || 'Не указано'}</p>
+							<p className="text-md text-gray-700">Вес: {item.weight || 'Не указано'}</p>
 						</div>
 					</div>
 				</ModalBody>

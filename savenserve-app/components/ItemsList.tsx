@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import ItemCard from './ItemCard';
-import {Item, useItemsStore} from "@/store/useItemStore/useItemStore";
+import useItemsStore from "@/store/useItemStore";
+import { Item } from '@/store/useItemStore/types';
 import {Spinner} from "@nextui-org/react";
 
 interface ItemCardProps {

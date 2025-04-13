@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useItemsStore } from "@/store/useItemStore/useItemStore";
+import useItemsStore from "@/store/useItemStore";
 import { useCategoriesStore } from "@/store/useCategoriesStore";
 import ItemsList from "@/components/ItemsList";
 import FloatingNavbar from "@/components/FloatingNavbar";

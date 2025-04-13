@@ -3,7 +3,7 @@
 import FloatingNavbar from "@/components/FloatingNavbar";
 import ItemsList from "@/components/ItemsList";
 import {useEffect, useState} from "react";
-import {useItemsStore} from "@/store/useItemStore/useItemStore";
+import useItemsStore from "@/store/useItemStore";
 import SidebarCategory from "@/components/SidebarCategory";
 import {useCategoriesStore} from "@/store/useCategoriesStore";
 

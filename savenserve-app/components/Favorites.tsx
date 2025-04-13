@@ -3,7 +3,7 @@
 import React from 'react';
 import ItemCard from '@/components/ItemCard';
 import {useLikeStore} from "@/store/useLikesStore";
-import {useItemsStore} from "@/store/useItemStore/useItemStore";
+import useItemsStore from "@/store/useItemStore";
 const Favorites: React.FC = () => {
 	const { likedItems, isLoading } = useLikeStore();
 	const { items } = useItemsStore();

@@ -105,31 +105,55 @@ export type Database = {
       }
       items: {
         Row: {
+          address: string | null
+          best_before: string | null
+          brand: string | null
           category_id: number
+          country_of_origin: string | null
           created_at: string
           description: string | null
           id: number
           image: string | null
+          information: string | null
           name: string
+          normal_price: number | null
           price: number
+          price_per_kg: number | null
+          weight: string | null
         }
         Insert: {
+          address?: string | null
+          best_before?: string | null
+          brand?: string | null
           category_id: number
+          country_of_origin?: string | null
           created_at?: string
           description?: string | null
           id?: number
           image?: string | null
+          information?: string | null
           name: string
+          normal_price?: number | null
           price: number
+          price_per_kg?: number | null
+          weight?: string | null
         }
         Update: {
+          address?: string | null
+          best_before?: string | null
+          brand?: string | null
           category_id?: number
+          country_of_origin?: string | null
           created_at?: string
           description?: string | null
           id?: number
           image?: string | null
+          information?: string | null
           name?: string
+          normal_price?: number | null
           price?: number
+          price_per_kg?: number | null
+          weight?: string | null
         }
         Relationships: [
           {

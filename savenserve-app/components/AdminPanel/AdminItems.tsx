@@ -2,9 +2,9 @@
 
 import React, {useEffect, useState} from 'react';
 import {Button, Input} from '@nextui-org/react';
-import { useItemsStore } from '@/store/useItemStore/useItemStore';
-import CreateItemModal from "./CreateItemModal";
-import {useAdminStore} from "@/store/useAdminStore";
+import useItemsStore  from '@/store/useItemStore';
+import CreateItemModal from "./AdminItemModal";
+import useAdminStore from "@/store/useAdminStore";
 
 const AdminPanel = () => {
 	const { items, deleteItem } = useItemsStore();
@@ -56,9 +56,11 @@ const AdminPanel = () => {
 							<div className="flex flex-col items-center mt-4 space-y-2 text-center">
 								<h3 className="font-semibold text-lg">{item.name}</h3>
 								<p className="text-gray-600 line-clamp-4">{item.description}</p>
-								<p className="text-lg font-bold text-primary-color">
-									{item.price} р.
-								</p>
+								<p className="text-gray-600">Адрес: {item.address || 'Не указано'}</p>
+								<p className="text-gray-600">Срок годности: {item.best_before || 'Не указано'}</p>
+								<p className="text-gray-600">Бренд: {item.brand || 'Не указано'}</p>
+								<p className="text-gray-600">Страна: {item.country_of_origin || 'Не указано'}</p>
+								<p className="text-lg font-bold text-primary-color">{item.price} р.</p>
 							</div>
 							<div className="flex gap-4 mt-4">
 								<Button

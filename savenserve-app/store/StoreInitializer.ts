@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { useItemsStore } from '@/store/useItemStore/useItemStore';
+import useItemsStore from './useItemStore';
 import { useLikeStore } from '@/store/useLikesStore';
 import useAuthStore from '@/store/useAuthStore';
 import {useCategoriesStore} from "@/store/useCategoriesStore";

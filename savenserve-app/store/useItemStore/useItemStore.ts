@@ -1,27 +1,8 @@
 import { create } from 'zustand';
-import { fetchItems, createItem, updateItemById, deleteItemById } from '@/api/items';
+import { fetchItems, createItem, updateItemById, deleteItemById, uploadItemImages, deleteItemImage } from '@/api/items';
+import { ItemState } from './types';
 
-export type Item = {
-	id: number;
-	category_id: number;
-	name: string;
-	description: string | null;
-	price: number;
-	image: string | null;
-};
-
-type ItemState = {
-	items: Item[];
-	isLoaded: boolean;
-	isLoading: boolean;
-	fetchItems: () => Promise<void>;
-	createItem: (payload: Omit<Item, 'id'>) => Promise<void>;
-	updateItem: (id: number, updatedData: Partial<Item>) => Promise<void>;
-	deleteItem: (id: number) => Promise<void>;
-	clearItems: () => void;
-};
-
-export const useItemsStore = create<ItemState>((set, get) => ({
+const useItemsStore = create<ItemState>((set, get) => ({
 	items: [],
 	isLoaded: false,
 	isLoading: false,
@@ -73,7 +54,27 @@ export const useItemsStore = create<ItemState>((set, get) => ({
 		}
 	},
 
+	uploadImages: async (files: File[], itemId: number): Promise<string[]> => {
+		try {
+			return await uploadItemImages(files, itemId);
+		} catch (err) {
+			console.error('Ошибка при загрузке изображений:', err);
+			return [];
+		}
+	},
+
+	deleteImage: async (imageUrl: string) => {
+		try {
+			await deleteItemImage(imageUrl);
+			console.log('Изображение успешно удалено');
+		} catch (err) {
+			console.error('Ошибка при удалении изображения:', err);
+		}
+	},
+
 	clearItems: () => {
 		set({ items: [], isLoaded: false });
 	},
 }));
+
+export default useItemsStore;
