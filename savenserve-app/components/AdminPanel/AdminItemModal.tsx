@@ -77,6 +77,7 @@ const AdminItemModal = () => {
 				normal_price: currentItem?.normal_price || null,
 				price_per_kg: currentItem?.price_per_kg || null,
 				weight: currentItem?.weight || '',
+				quantity: currentItem?.quantity || 0
 			};
 
 			if (!newItem.category_id) {
@@ -287,6 +288,18 @@ const AdminItemModal = () => {
 						value={currentItem?.weight || ''}
 						onChange={(e) =>
 							setCurrentItem({ ...currentItem, weight: e.target.value })
+						}
+					/>
+					<Input
+						label="Количество"
+						type="number"
+						placeholder="Введите количество"
+						value={currentItem?.quantity || ''}
+						onChange={(e) =>
+							setCurrentItem({
+								...currentItem,
+								quantity: parseInt(e.target.value, 10) || 0,
+							})
 						}
 					/>
 					<Select

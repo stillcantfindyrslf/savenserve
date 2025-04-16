@@ -19,7 +19,8 @@ export const fetchItems = async (): Promise<Item[]> => {
     normal_price,
     price_per_kg,
     weight,
-		item_images (image_url)
+		item_images (image_url),
+		quantity
   `);
 
 	if (error) {
@@ -58,6 +59,7 @@ export const updateItemById = async (payload: {
 	normal_price?: number | null;
 	price_per_kg?: number | null;
 	weight?: string | null;
+	quantity: number;
 }): Promise<Item> => {
 	const { id, ...updatedData } = payload;
 	const { data, error } = await supabase
@@ -77,7 +79,9 @@ export const updateItemById = async (payload: {
     	information,
     	normal_price,
     	price_per_kg,
-    	weight
+    	weight,
+			item_images (image_url),
+			quantity
     `)
 		.single();
 
@@ -104,6 +108,7 @@ export const createItem = async (payload: {
 	normal_price?: number | null;
 	price_per_kg?: number | null;
 	weight?: string | null;
+	quantity: number;
 }): Promise<Item> => {
 	try {
 		const { data, error } = await supabase
@@ -121,6 +126,7 @@ export const createItem = async (payload: {
 				normal_price: payload.normal_price || null,
 				price_per_kg: payload.price_per_kg || null,
 				weight: payload.weight || null,
+				quantity: payload.quantity
 			})
 			.select()
 			.single();

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createClient } from '@/utils/supabase/client';
 import { AuthState } from './types';
-import {toast} from "sonner";
+import { toast } from "sonner";
 
 const supabase = createClient();
 
@@ -31,6 +31,7 @@ const useAuthStore = create<AuthState>((set, get) => ({
 				set({ user: data.user, isAuthModalOpen: false });
 			} else {
 				const { data, error } = await supabase.auth.signUp({ email, password });
+				if (error) throw error;
 				toast.info("Успех, на вашу почту было выслано письмо с подтверждением.");
 				if (error) throw error;
 				set({ user: data.user, isAuthModalOpen: false });

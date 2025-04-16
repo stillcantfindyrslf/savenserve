@@ -13,6 +13,7 @@ export type Item = {
   price_per_kg: number | null; 
   weight: string | null; 
   images: string[];
+  quantity: number;
 };
 
 export type ItemState = {
