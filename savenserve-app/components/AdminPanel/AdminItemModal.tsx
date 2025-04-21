@@ -69,6 +69,7 @@ const AdminItemModal = () => {
 				description: currentItem?.description || '',
 				price: currentItem?.price || 0,
 				category_id: currentItem?.category_id || null,
+				subcategory_id: currentItem?.subcategory_id || null,
 				address: currentItem?.address || '',
 				best_before: currentItem?.best_before || '',
 				brand: currentItem?.brand || '',
@@ -311,6 +312,7 @@ const AdminItemModal = () => {
 							setCurrentItem({
 								...currentItem,
 								category_id: parseInt(selectedKey as string, 10),
+								subcategory_id: null,
 							});
 						}}
 					>
@@ -318,6 +320,28 @@ const AdminItemModal = () => {
 							<SelectItem key={category.id.toString()}>{category.name}</SelectItem>
 						))}
 					</Select>
+
+					{currentItem?.category_id && (
+						<Select
+							label="Подкатегория"
+							placeholder="Выберите подкатегорию"
+							selectedKeys={currentItem?.subcategory_id ? [currentItem.subcategory_id.toString()] : []}
+							onSelectionChange={(keys) => {
+								const selectedKey = Array.from(keys)[0];
+								setCurrentItem({
+									...currentItem,
+									subcategory_id: parseInt(selectedKey as string, 10),
+								});
+							}}
+						>
+							{categories.length > 0 &&
+								categories
+									.find((category) => category.id === currentItem.category_id)
+									?.subcategories?.map((subcategory) => (
+										<SelectItem key={subcategory.id.toString()}>{subcategory.name}</SelectItem>
+									))}
+						</Select>
+					)}
 				</ModalBody>
 				<ModalFooter>
 					<Button className='text-white' color="success" onPress={handleSubmit}>

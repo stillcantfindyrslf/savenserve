@@ -1,18 +1,8 @@
+import { LikeState } from './types';
 import { create } from 'zustand';
 import { addLike, getLikedItems, removeLike } from '@/api/likes';
 
-interface LikeState {
-	likedItems: number[];
-	isLoading: boolean;
-	isLoaded: boolean;
-	error: string | null;
-
-	fetchLikedItems: (userId: string) => void;
-	toggleLike: (userId: string, itemId: number) => void;
-	isLiked: (itemId: number) => boolean;
-}
-
-export const useLikeStore = create<LikeState>((set, get) => ({
+const useLikeStore = create<LikeState>((set, get) => ({
 	likedItems: [],
 	isLoading: false,
 	isLoaded: false,
@@ -49,3 +39,5 @@ export const useLikeStore = create<LikeState>((set, get) => ({
 		return get().likedItems.includes(itemId);
 	},
 }));
+
+export default useLikeStore;

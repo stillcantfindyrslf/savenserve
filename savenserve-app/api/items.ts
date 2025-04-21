@@ -8,6 +8,7 @@ export const fetchItems = async (): Promise<Item[]> => {
 	const { data, error } = await supabase.from('items').select(`
     id,
     category_id,
+		subcategory_id,
     name,
     description,
     price,
@@ -48,6 +49,7 @@ export const deleteItemById = async (itemId: number): Promise<void> => {
 export const updateItemById = async (payload: {
 	id: number;
 	category_id?: number;
+	subcategory_id: number | null,
 	name?: string;
 	description?: string | null;
 	price?: number;
@@ -69,6 +71,7 @@ export const updateItemById = async (payload: {
 		.select(`
       id,
       category_id,
+			subcategory_id,
       name,
       description,
       price,
@@ -97,6 +100,7 @@ export const updateItemById = async (payload: {
 
 export const createItem = async (payload: {
 	category_id: number;
+	subcategory_id: number | null,
 	name: string;
 	description?: string | null;
 	price: number;
@@ -115,6 +119,7 @@ export const createItem = async (payload: {
 			.from('items')
 			.insert({
 				category_id: payload.category_id,
+				subcategory_id: payload.subcategory_id,
 				name: payload.name,
 				description: payload.description || null,
 				price: payload.price,

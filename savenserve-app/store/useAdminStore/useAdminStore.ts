@@ -1,8 +1,6 @@
 import { create } from 'zustand';
-import { createClient } from '@/utils/supabase/client';
 import { AdminStoreState } from './types';
-
-const supabase = createClient();
+import { fetchCategories } from '@/api/categories';
 
 const useAdminStore = create<AdminStoreState>((set) => ({
     isModalOpen: false,
@@ -12,11 +10,11 @@ const useAdminStore = create<AdminStoreState>((set) => ({
     closeModal: () => set({ isModalOpen: false }),
     setCurrentItem: (item) => set({ currentItem: item }),
     fetchCategories: async () => {
-        const { data, error } = await supabase.from('categories').select('id, name');
-        if (error) {
-            console.error('Ошибка загрузки категорий:', error);
-        } else {
-            set({ categories: data || [] });
+        try {
+            const categories = await fetchCategories();
+            set({ categories });
+        } catch (error) {
+            console.error('Ошибка при загрузке категорий:', error);
         }
     },
 }));

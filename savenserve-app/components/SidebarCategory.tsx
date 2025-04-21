@@ -1,35 +1,42 @@
 import React, { FC } from "react";
-import { Category } from "@/store/useCategoriesStore";
-import { Listbox, ListboxItem } from "@nextui-org/react";
+import { Category } from "@/store/useCategoriesStore/types";
 import { useRouter } from "next/navigation";
+import { LuMilk, LuWheat } from "react-icons/lu";
+import { TbBottle, TbCoffee, TbMeat, TbChefHat, TbCandy, TbBrandPeanut  } from "react-icons/tb";
+import { CiBowlNoodles } from "react-icons/ci";
+import { GiOpenedFoodCan } from "react-icons/gi";
 
 interface SidebarCategoryProps {
 	categories: Category[];
-	activeCategoryId?: number;
+	activeCategoryUrlName?: string;
 }
 
-const SidebarCategory: FC<SidebarCategoryProps> = ({ categories, activeCategoryId }) => {
+const SidebarCategory: FC<SidebarCategoryProps> = ({ categories, activeCategoryUrlName }) => {
 	const router = useRouter();
+
+	const icons = [<LuWheat key="wheat" />, <TbChefHat key="cook" />, <TbMeat key="meat" />, <TbCoffee key="coffe" />,
+		<TbCandy key="candy" />, <LuMilk key="milk" />, <TbBottle key="bottle" />, <CiBowlNoodles key="pasta" />,
+		<GiOpenedFoodCan key="food-can" />, <TbBrandPeanut key="peanut" />
+	];
 
 	return (
 		<>
-			<h2 className="text-lg font-semibold px-2 mb-2">Категории</h2>
-			<Listbox
-				aria-label="Список категорий"
-				items={categories}
-				onAction={(key) => router.push(`/category/${key}`)}
-			>
-				{(category) => (
-					<ListboxItem
-						key={category.id}
-						className={`cursor-pointer px-4 py-2 rounded-lg ${
-							activeCategoryId === category.id ? "bg-primary-color text-white font-bold" : "hover:bg-gray-100"
-						}`}
+			<h2 className="text-lg px-3 mb-2">Категории</h2>
+			<div aria-label="Список категорий" className="space-y-1">
+				{categories.map((category, index) => (
+					<div
+						key={category.url_name}
+						onClick={() => router.push(`/category/${category.url_name}`)}
+						className={`flex items-center cursor-pointer px-2 py-2 text-gray-700 rounded-md transition-colors ${activeCategoryUrlName === category.url_name
+								? "border-2 border-primary-color bg-white"
+								: "hover:bg-white"
+							}`}
 					>
+						<span className="mr-1 text-lg">{icons[index % icons.length]}</span>
 						{category.name}
-					</ListboxItem>
-				)}
-			</Listbox>
+					</div>
+				))}
+			</div>
 		</>
 	);
 };

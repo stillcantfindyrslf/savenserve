@@ -1,6 +1,7 @@
 export type Item = {
   id: number;
   category_id: number;
+  subcategory_id: number | null;
   name: string;
   description: string | null;
   price: number;

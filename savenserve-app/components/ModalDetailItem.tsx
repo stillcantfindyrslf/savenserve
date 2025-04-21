@@ -3,7 +3,7 @@ import {Modal, Image, Button, ModalBody, ModalFooter, ModalHeader} from '@nextui
 import { Item } from '@/store/useItemStore/types';
 import {ModalContent} from "@nextui-org/modal";
 import {IoCloseOutline} from "react-icons/io5";
-import {useLikeStore} from "@/store/useLikesStore";
+import useLikeStore from "@/store/useLikesStote/useLikesStore";
 import {FaHeart} from "react-icons/fa6";
 
 interface ItemModalProps {
