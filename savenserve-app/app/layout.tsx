@@ -43,7 +43,7 @@ export default function RootLayout({
 				className={`${montserrat.variable}`}
 			>
 				<NextUIProvider>
-					<Toaster position='top-center' richColors />
+					<Toaster position='bottom-right' richColors closeButton expand visibleToasts={1} duration={2000}/>
 					<div className="max-w-7xl mx-auto px-5">
 						{children}
 					</div>

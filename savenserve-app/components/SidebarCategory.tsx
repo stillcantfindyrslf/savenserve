@@ -27,12 +27,12 @@ const SidebarCategory: FC<SidebarCategoryProps> = ({ categories, activeCategoryU
 					<div
 						key={category.url_name}
 						onClick={() => router.push(`/category/${category.url_name}`)}
-						className={`flex items-center cursor-pointer px-2 py-2 text-gray-700 rounded-md transition-colors ${activeCategoryUrlName === category.url_name
+						className={`flex items-center cursor-pointer px-2 py-2 text-gray-700 gap-2 rounded-md transition-colors ${activeCategoryUrlName === category.url_name
 								? "border-2 border-primary-color bg-white"
 								: "hover:bg-white"
 							}`}
 					>
-						<span className="mr-1 text-lg">{icons[index % icons.length]}</span>
+						<span className="text-lg">{icons[index % icons.length]}</span>
 						{category.name}
 					</div>
 				))}

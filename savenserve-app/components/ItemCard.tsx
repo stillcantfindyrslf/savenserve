@@ -1,16 +1,26 @@
 import React from 'react';
-import { Card, CardBody, CardFooter, Image, useDisclosure } from '@nextui-org/react';
+import { Card, CardBody, CardFooter, Image, useDisclosure, Button } from '@nextui-org/react';
 import { Item } from '@/store/useItemStore/types';
 import useAuthStore from '@/store/useAuthStore';
 import useCartStore from '@/store/useCartStore';
 import { toast } from 'sonner';
 import ItemDetailModal from "@/components/ModalDetailItem";
+import { FaRegTrashCan } from "react-icons/fa6";
+import { HiOutlinePencilAlt } from "react-icons/hi";
 
 interface ItemCardProps {
 	item: Item;
+	isAdmin?: boolean;
+	onEdit?: (item: Item) => void;
+	onDelete?: (id: number) => void;
 }
 
-const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
+const ItemCard: React.FC<ItemCardProps> = ({
+	item,
+	isAdmin = false,
+	onEdit,
+	onDelete
+}) => {
 	const { user } = useAuthStore();
 	const { cartItems, addToCart, updateCartItem, removeFromCart } = useCartStore();
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -18,35 +28,48 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
 	const cartItem = cartItems.find((cartItem) => cartItem.item.id === item.id);
 	const quantityInCart = cartItem ? cartItem.quantity : 0;
 
-  const handleAddToCart = () => {
-    if (!user) {
-      toast.warning('Войдите, чтобы добавить товар в корзину.');
-      return;
-    }
+	const handleAddToCart = () => {
+		if (!user) {
+			toast.warning('Войдите, чтобы добавить товар в корзину.');
+			return;
+		}
 
-    if (quantityInCart < item.quantity) {
-      addToCart(item.id, 1);
-    } else {
-      toast.warning('Недостаточно товара на складе.');
-    }
-  };
+		if (quantityInCart < item.quantity) {
+			addToCart(item.id, 1);
+		} else {
+			toast.warning('Недостаточно товара на складе.');
+		}
+	};
 
-  const handleUpdateQuantity = (newQuantity: number) => {
-    if (!cartItem) return;
+	const handleUpdateQuantity = (newQuantity: number) => {
+		if (!cartItem) return;
 
-    if (newQuantity > 0 && newQuantity <= item.quantity) {
-      updateCartItem(cartItem.id, newQuantity);
-    } else if (newQuantity === 0) {
-      removeFromCart(cartItem.id);
-    } else {
-      toast.warning('Недостаточно товара на складе.');
-    }
-  };
+		if (newQuantity > 0 && newQuantity <= item.quantity) {
+			updateCartItem(cartItem.id, newQuantity);
+		} else if (newQuantity === 0) {
+			removeFromCart(cartItem.id);
+		} else {
+			toast.warning('Недостаточно товара на складе.');
+		}
+	};
+
+	const handleEdit = () => {
+		if (onEdit) {
+			onEdit(item);
+		}
+	};
+
+	const handleDelete = () => {
+		if (onDelete) {
+			onDelete(item.id);
+		}
+	};
 
 	return (
 		<>
 			<Card
 				disableRipple
+				isPressable={!isAdmin}
 				className="rounded-xl p-0 duration-300 ease-in-out"
 				shadow="none"
 				key={item.id}
@@ -70,38 +93,59 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
 					</div>
 				</CardBody>
 				<CardFooter className="p-2 pt-0">
-					{quantityInCart === 0 ? (
-						<button
-							className="w-full py-3 bg-light-secondary-color text-color-text font-semibold rounded-md hover:bg-secondary-color transition-all"
-							onClick={(e) => {
-								e.stopPropagation();
-								handleAddToCart();
-							}}
-						>
-							Добавить в корзину
-						</button>
-					) : (
-						<div className="mx-auto py-1.5 px-2 bg-secondary-color rounded-full flex items-center text-3xl text-color-text gap-8">
-							<button
-								className="w-9 h-9 flex items-center justify-center text-4xl text-color-text rounded-full border-2 border-color-text active:scale-80 transition-transform duration-150"
-								onClick={(e) => {
-                  e.stopPropagation();
-                  handleUpdateQuantity(quantityInCart - 1);
-                }}
+					{isAdmin ? (
+						<div className="flex w-full gap-2">
+							<Button
+								className="bg-light-secondary-color text-gray-700 flex-1 items-center gap-1"
+								onPress={handleEdit}
+								startContent={<HiOutlinePencilAlt size={17} />}
 							>
-								&#8722;
-							</button>
-							<span className="font-semibold">{quantityInCart}</span>
-							<button
-								className="w-9 h-9 flex items-center justify-center text-4xl text-color-text rounded-full border-2 border-color-text active:scale-80 transition-transform duration-150"
-								onClick={(e) => {
-                  e.stopPropagation();
-                  handleUpdateQuantity(quantityInCart + 1);
-                }}
+								Изменить
+							</Button>
+							<Button
+								className="bg-red-100 text-red-600 flex-1 hover:bg-red-200 items-center gap-1"
+								onPress={handleDelete}
+								startContent={<FaRegTrashCan size={16} />}
 							>
-								+
-							</button>
+								Удалить
+							</Button>
 						</div>
+					) : (
+						<>
+							{quantityInCart === 0 ? (
+								<button
+									className="w-full py-3 bg-light-secondary-color text-color-text font-semibold rounded-md hover:bg-secondary-color transition-all"
+									onClick={(e) => {
+										e.stopPropagation();
+										handleAddToCart();
+									}}
+								>
+									Добавить в корзину
+								</button>
+							) : (
+								<div className="mx-auto py-1.5 px-2 bg-secondary-color rounded-full flex items-center text-3xl text-color-text gap-8">
+									<button
+										className="w-9 h-9 flex items-center justify-center text-4xl text-color-text rounded-full border-2 border-color-text active:scale-80 transition-transform duration-150"
+										onClick={(e) => {
+											e.stopPropagation();
+											handleUpdateQuantity(quantityInCart - 1);
+										}}
+									>
+										&#8722;
+									</button>
+									<span className="font-semibold">{quantityInCart}</span>
+									<button
+										className="w-9 h-9 flex items-center justify-center text-4xl text-color-text rounded-full border-2 border-color-text active:scale-80 transition-transform duration-150"
+										onClick={(e) => {
+											e.stopPropagation();
+											handleUpdateQuantity(quantityInCart + 1);
+										}}
+									>
+										+
+									</button>
+								</div>
+							)}
+						</>
 					)}
 				</CardFooter>
 			</Card>

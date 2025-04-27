@@ -40,11 +40,12 @@ const ItemDetailModal: React.FC<ItemModalProps> = ({isOpen, onOpenChange, item, 
 				<ModalBody>
 					<div className="flex gap-6">
 						<Image
-							src={item.image || '/placeholder-image.jpg'}
+							src={item.images && item.images.length > 0 ? item.images[0] : '/placeholder-image.jpg'}
 							alt={item.name}
-							width={600}
+							width={470}
 							height={300}
 							objectFit="cover"
+							className="max-w-72"
 						/>
 						<div className="flex flex-col">
 							<div className="flex items-start gap-4">

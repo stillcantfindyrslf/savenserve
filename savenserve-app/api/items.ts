@@ -94,8 +94,13 @@ export const updateItemById = async (payload: {
 		throw new Error(error.message || 'Не удалось обновить товар');
 	}
 
+	const updatedItem = {
+		...data,
+		images: data.item_images.map((img: any) => img.image_url)
+	};
+
 	toast.success('Товар успешно обновлён');
-	return data as Item;
+	return updatedItem as Item;
 };
 
 export const createItem = async (payload: {
