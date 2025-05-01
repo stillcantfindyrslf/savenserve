@@ -30,14 +30,33 @@ const useAuthStore = create<AuthState>((set, get) => ({
 				if (error) throw error;
 				set({ user: data.user, isAuthModalOpen: false });
 			} else {
+				const { data: existingUser } = await supabase.auth.signUp({ email, password });
+
+				if (existingUser.user) {
+					set({ error: "Пользователь с таким email уже зарегистрирован" });
+					return;
+				}
+
 				const { data, error } = await supabase.auth.signUp({ email, password });
 				if (error) throw error;
+
 				toast.info("Успех, на вашу почту было выслано письмо с подтверждением.");
-				if (error) throw error;
-				set({ user: data.user, isAuthModalOpen: false });
+				set({ isAuthModalOpen: false });
+
+				if (data.user) {
+					set({ user: data.user });
+				}
 			}
 		} catch (err: any) {
-			set({ error: err.message });
+			if (err.message === "User already registered") {
+				set({ error: "Пользователь с таким email уже зарегистрирован" });
+			} else if (err.message === "Invalid login credentials") {
+				set({ error: "Неверный email или пароль" });
+			} else if (err.message.includes("Email not confirmed")) {
+				set({ error: "Email не подтвержден. Пожалуйста, проверьте вашу почту." });
+			} else {
+				set({ error: err.message });
+			}
 		} finally {
 			set({ loading: false });
 		}
@@ -73,6 +92,96 @@ const useAuthStore = create<AuthState>((set, get) => ({
 			set({ error: err.message });
 		} finally {
 			set({ loading: false });
+		}
+	},
+
+	updateProfile: async (name: string, avatar_url: string | null) => {
+		set({ loading: true, error: null });
+		try {
+			const { error } = await supabase.auth.updateUser({
+				data: {
+					full_name: name,
+					avatar_url: avatar_url
+				}
+			});
+
+			if (error) throw error;
+
+			const { data: { user } } = await supabase.auth.getUser();
+			set({ user, loading: false });
+
+			return { success: true };
+		} catch (err: any) {
+			set({ error: err.message, loading: false });
+			return { success: false, error: err.message };
+		}
+	},
+
+	uploadAvatar: async (file: File) => {
+		const { user } = get();
+		if (!user) return { success: false, error: 'Пользователь не авторизован' };
+
+		try {
+			const fileExt = file.name.split('.').pop();
+			const fileName = `${user.id}_${Date.now()}.${fileExt}`;
+
+			const { error: uploadError } = await supabase.storage
+				.from('avatars')
+				.upload(fileName, file, {
+					cacheControl: '3600',
+					upsert: true
+				});
+
+			if (uploadError) throw uploadError;
+
+			const { data: publicUrlData } = supabase.storage
+				.from('avatars')
+				.getPublicUrl(fileName);
+
+			return {
+				success: true,
+				avatarUrl: publicUrlData.publicUrl
+			};
+		} catch (err: any) {
+			return {
+				success: false,
+				error: err.message
+			};
+		}
+	},
+
+	resetPassword: async (email: string) => {
+		set({ loading: true, error: null });
+		try {
+			const { error } = await supabase.auth.resetPasswordForEmail(email, {
+				redirectTo: `${window.location.origin}/reset-password`,
+			});
+
+			if (error) throw error;
+
+			set({ loading: false });
+			return { success: true };
+		} catch (err: any) {
+			set({ error: err.message, loading: false });
+			return { success: false, error: err.message };
+		}
+	},
+
+	sendEmailConfirmation: async (email: string) => {
+		set({ loading: true, error: null });
+		try {
+			const { error } = await supabase.auth.resend({
+				type: 'signup',
+				email: email,
+			});
+
+			if (error) throw error;
+
+			set({ loading: false });
+			return { success: true };
+		} catch (err: any) {
+			set({ error: err.message, loading: false });
+			return { success: false, error: err.message };
 		}
 	},
 
