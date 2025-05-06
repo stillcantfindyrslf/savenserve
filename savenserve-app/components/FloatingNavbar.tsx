@@ -13,15 +13,16 @@ import {
 	Input,
 	NavbarMenu,
 	NavbarMenuItem,
-	Avatar
+	Avatar,
+	Badge
 } from "@nextui-org/react";
 import Link from 'next/link'
-import { PiShoppingCartSimpleBold } from "react-icons/pi";
-import { IoPersonCircleOutline } from 'react-icons/io5';
+import { PiShoppingCartSimpleBold, PiPlantFill } from "react-icons/pi";
 import { BiUser } from "react-icons/bi";
 import { RxCross2, RxHamburgerMenu } from "react-icons/rx";
 import { FiSearch } from "react-icons/fi";
 import useAuthStore from "@/store/useAuthStore";
+import useCartStore from "@/store/useCartStore";
 import AuthModal from "@/components/AuthModal";
 import { toast } from "sonner";
 
@@ -61,6 +62,9 @@ const FloatingNavbar: React.FC<NavbarProps> = ({
 }) => {
 	const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 	const { user, openAuthModal, handleLogout } = useAuthStore();
+	const { cartItems } = useCartStore();
+
+	const totalItemsInCart = cartItems.reduce((total, item) => total + item.quantity, 0);
 
 	const getUserAvatarContent = () => {
 		if (!user) return <BiUser className="text-color-text" size={28} />;
@@ -106,7 +110,8 @@ const FloatingNavbar: React.FC<NavbarProps> = ({
 					/>
 					<NavbarContent>
 						<NavbarBrand className="ml-2">
-							<Link href="/">
+							<Link href="/" className="flex items-center">
+								<PiPlantFill className="text-secondary-color mr-3	" size={32} />
 								<p className="text-light-white-color font-bold text-2xl">{title}</p>
 							</Link>
 						</NavbarBrand>
@@ -140,14 +145,26 @@ const FloatingNavbar: React.FC<NavbarProps> = ({
 							</Link>
 						)}
 						{showCart && (
-							<Button
-								isIconOnly
-								className="bg-light-white-color text-black p-2.5 rounded-full shadow-lg hover:bg-gray-200"
-								aria-label="Shopping Cart"
-								onPress={handleCartClick}
+							<Badge
+								content={totalItemsInCart > 0 ? totalItemsInCart : null}
+								color="danger"
+								shape="circle"
+								size="md"
+								classNames={{
+									badge: "bg-red-400 text-white font-bold"
+								}}
+								placement="top-right"
+								isInvisible={totalItemsInCart === 0}
 							>
-								<PiShoppingCartSimpleBold className="text-color-text" size={28} />
-							</Button>
+								<Button
+									isIconOnly
+									className="bg-light-white-color text-black p-2.5 rounded-full shadow-lg hover:bg-gray-200"
+									aria-label={`Shopping Cart with ${totalItemsInCart} items`}
+									onPress={handleCartClick}
+								>
+									<PiShoppingCartSimpleBold className="text-color-text" size={30} />
+								</Button>
+							</Badge>
 						)}
 						{showUserMenu && (
 							<Dropdown placement="bottom-end">

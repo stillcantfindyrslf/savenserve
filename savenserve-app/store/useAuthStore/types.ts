@@ -21,4 +21,6 @@ export interface AuthState {
 	uploadAvatar: (file: File) => Promise<{success: boolean, avatarUrl?: string, error?: string}>;
 	resetPassword: (email: string) => Promise<{success: boolean, error?: string}>;
 	sendEmailConfirmation: (email: string) => Promise<{success: boolean, error?: string}>;
+	updateSubscription: (isSubscribed: boolean) => Promise<{success: boolean, error?: string}>;
+	fetchUserProfile: () => Promise<any | null>;
 }

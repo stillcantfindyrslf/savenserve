@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Button, Input, Avatar, Spinner, Card, Tooltip } from '@nextui-org/react';
+import { Button, Input, Avatar, Spinner, Card, Tooltip, Switch } from '@nextui-org/react';
 import useAuthStore from '@/store/useAuthStore';
 import { toast } from 'sonner';
 import FloatingNavbar from '@/components/FloatingNavbar';
@@ -14,7 +14,7 @@ import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
 const ProfilePage = () => {
-  const { user, updateProfile, uploadAvatar, resetPassword, loading: authLoading } = useAuthStore();
+  const { user, updateProfile, uploadAvatar, resetPassword, loading: authLoading, updateSubscription, fetchUserProfile } = useAuthStore();
   const [name, setName] = useState('');
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -22,16 +22,33 @@ const ProfilePage = () => {
   const [resetLoading, setResetLoading] = useState(false);
   const [profileLoading, setProfileLoading] = useState(false);
   const [isPageReady, setIsPageReady] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
     if (!authLoading) {
       if (user) {
         setName(user.user_metadata?.full_name || '');
         setAvatarUrl(user.user_metadata?.avatar_url || null);
+        fetchUserProfile();
+
+        setIsSubscribed(user.profile?.is_subscribed || false);
       }
       setIsPageReady(true);
     }
-  }, [user, authLoading]);
+  }, [user, authLoading, fetchUserProfile]);
+
+  const handleSubscriptionToggle = async () => {
+    try {
+      const { success, error } = await updateSubscription(!isSubscribed);
+
+      if (!success) throw new Error(error);
+
+      toast.success(`Рассылка ${!isSubscribed ? "включена" : "выключена"}`);
+    } catch (error) {
+      toast.error("Ошибка при обновлении подписки");
+    } finally {
+    }
+  };
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -222,7 +239,7 @@ const ProfilePage = () => {
                 ) : (
                   <>
                     <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-color-text">
-                      <IoPersonCircleOutline className="text-primary-color" size={24} />
+                      <IoPersonCircleOutline className="text-primary-color" size={28} />
                       Мои данные
                     </h2>
 
@@ -235,6 +252,24 @@ const ProfilePage = () => {
                         className="max-w-md"
                         description="Это имя будет отображаться в вашем профиле и заказах"
                       />
+
+                      <div className="mt-6">
+                        <h3 className="text-xl font-semibold flex items-center text-color-text gap-2">
+                          <IoMailOpenOutline className="text-primary-color" size={28} />
+                          Подписка на рассылку
+                        </h3>
+
+                        <div className="mt-3 flex items-center gap-3">
+                          <Switch
+                            isSelected={isSubscribed}
+                            onValueChange={handleSubscriptionToggle}
+                            color="success"
+                          />
+                          <span className="text-gray-700">
+                            Получать уведомления о товарах со скидкой
+                          </span>
+                        </div>
+                      </div>
 
                       <div className="mt-8">
                         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-color-text">

@@ -12,6 +12,9 @@ export const fetchItems = async (): Promise<Item[]> => {
     name,
     description,
     price,
+		discount_price,
+		auto_discount,
+    custom_discounts,
 		address,
     best_before,
     brand,
@@ -62,6 +65,8 @@ export const updateItemById = async (payload: {
 	price_per_kg?: number | null;
 	weight?: string | null;
 	quantity: number;
+	auto_discount: boolean;
+	custom_discounts?: Record<string, number>;
 }): Promise<Item> => {
 	const { id, ...updatedData } = payload;
 	const { data, error } = await supabase
@@ -84,7 +89,9 @@ export const updateItemById = async (payload: {
     	price_per_kg,
     	weight,
 			item_images (image_url),
-			quantity
+			quantity,
+			auto_discount,
+			custom_discounts
     `)
 		.single();
 
@@ -118,6 +125,8 @@ export const createItem = async (payload: {
 	price_per_kg?: number | null;
 	weight?: string | null;
 	quantity: number;
+	auto_discount: boolean;
+	custom_discounts?: Record<string, number>;
 }): Promise<Item> => {
 	try {
 		const { data, error } = await supabase
@@ -136,7 +145,9 @@ export const createItem = async (payload: {
 				normal_price: payload.normal_price || null,
 				price_per_kg: payload.price_per_kg || null,
 				weight: payload.weight || null,
-				quantity: payload.quantity
+				quantity: payload.quantity,
+				discount_price: payload.price,
+				auto_discount: payload.auto_discount
 			})
 			.select()
 			.single();

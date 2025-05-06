@@ -185,6 +185,62 @@ const useAuthStore = create<AuthState>((set, get) => ({
 		}
 	},
 
+	updateSubscription: async (isSubscribed: boolean) => {
+		const { user } = get();
+		if (!user) return { success: false, error: 'Пользователь не авторизован' };
+
+		try {
+			const { error } = await supabase
+				.from('user_profiles')
+				.upsert({ id: user.id, is_subscribed: isSubscribed, email: user.email }, { onConflict: 'id' });
+
+			if (error) throw error;
+
+			const updatedUser = {
+				...user,
+				profile: {
+					...(user.profile || {}),
+					is_subscribed: isSubscribed,
+					email: user.email,
+				}
+			};
+
+			set({ user: updatedUser });
+
+			return { success: true };
+		} catch (err: any) {
+			return { success: false, error: err.message };
+		}
+	},
+
+	fetchUserProfile: async () => {
+		const { user } = get();
+		if (!user || user.profile) return null;
+
+		try {
+			const { data, error } = await supabase
+				.from('user_profiles')
+				.select('*')
+				.eq('id', user.id)
+				.single();
+
+			if (error) throw error;
+
+			const updatedUser = {
+				...user,
+				profile: {
+					...data,
+					is_subscribed: !!data?.is_subscribed
+				}
+			};
+
+			set({ user: updatedUser });
+			return data;
+		} catch (err) {
+			return null;
+		}
+	},
+
 	setUser: (user) => set({ user }),
 }));
 

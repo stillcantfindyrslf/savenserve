@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Input, Textarea, Select, SelectItem } from '@nextui-org/react';
+import { Button, Input, Textarea, Select, SelectItem, Checkbox } from '@nextui-org/react';
 import { toast } from 'sonner';
 import { Modal, ModalBody, ModalFooter, ModalHeader } from '@nextui-org/react';
 import { ModalContent } from '@nextui-org/modal';
@@ -18,11 +18,18 @@ const AdminItemModal = () => {
 		categories,
 		fetchCategories,
 	} = useAdminStore();
+	const { createItem, updateItem, uploadImages, deleteImage } = useItemsStore();
 
 	const [images, setImages] = useState<string[]>([]);
 	const [imageFiles, setImageFiles] = useState<File[]>([]);
 	const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-	const { createItem, updateItem, uploadImages, deleteImage } = useItemsStore();
+	const [autoDiscount, setAutoDiscount] = useState(true);
+	const [customDiscounts, setCustomDiscounts] = useState<{ "5": number; "2": number; "1": number }>({
+		"5": 0,
+		"2": 0,
+		"1": 0,
+	});
+	const [noDiscount, setNoDiscount] = useState(false);
 
 	useEffect(() => {
 		fetchCategories();
@@ -48,6 +55,14 @@ const AdminItemModal = () => {
 			setImages([]);
 			setImageFiles([]);
 			setImagePreviews([]);
+		}
+	}, [isModalOpen, currentItem]);
+
+	useEffect(() => {
+		if (isModalOpen && currentItem) {
+			setAutoDiscount(currentItem.auto_discount || false);
+			setCustomDiscounts(currentItem.custom_discounts || { "5": 0, "2": 0, "1": 0 });
+			setNoDiscount(!currentItem.auto_discount && !currentItem.custom_discounts);
 		}
 	}, [isModalOpen, currentItem]);
 
@@ -78,7 +93,9 @@ const AdminItemModal = () => {
 				normal_price: currentItem?.normal_price || null,
 				price_per_kg: currentItem?.price_per_kg || null,
 				weight: currentItem?.weight || '',
-				quantity: currentItem?.quantity || 0
+				quantity: currentItem?.quantity || 0,
+				auto_discount: !noDiscount && autoDiscount,
+				custom_discounts: !noDiscount && !autoDiscount ? customDiscounts : null,
 			};
 
 			if (!newItem.category_id) {
@@ -341,6 +358,122 @@ const AdminItemModal = () => {
 										<SelectItem key={subcategory.id.toString()}>{subcategory.name}</SelectItem>
 									))}
 						</Select>
+					)}
+
+					<div className="flex flex-col gap-2 mt-6 border-t pt-4 border-gray-200">
+						<h3 className="text-lg font-medium text-gray-700 mb-2">Настройки скидок</h3>
+
+						<Checkbox
+							isSelected={noDiscount}
+							onChange={(checked) => {
+								setNoDiscount(() => Boolean(checked));
+								if (checked) {
+									setAutoDiscount(false);
+									setCustomDiscounts({ "5": 0, "2": 0, "1": 0 });
+								}
+							}}
+							color="default"
+							className="mb-2"
+						>
+							<span className="text-gray-700">Не применять скидки</span>
+						</Checkbox>
+
+						<Checkbox
+							isSelected={autoDiscount && !noDiscount}
+							onChange={(checked) => {
+								setAutoDiscount(() => Boolean(checked));
+								if (checked) {
+									setNoDiscount(false);
+									setCustomDiscounts({ "5": 0, "2": 0, "1": 0 });
+								}
+							}}
+							color="success"
+							className="mb-2"
+						>
+							<span className="text-gray-700">Применить автоматические скидки</span>
+						</Checkbox>
+
+						<Checkbox
+							isSelected={!autoDiscount && !noDiscount}
+							onChange={(checked) => {
+								setAutoDiscount(() => Boolean(!checked));
+								if (checked) {
+									setNoDiscount(() => false);
+									setCustomDiscounts({ "5": 0, "2": 0, "1": 0 });
+								}
+							}}
+							color="warning"
+							className="mb-2"
+						>
+							<span className="text-gray-700">Составить кастомные скидки</span>
+						</Checkbox>
+					</div>
+
+					{!autoDiscount && !noDiscount && (
+						<div className="mt-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+							<h4 className="text-md font-medium text-gray-700 mb-3">Настройка скидок по дням</h4>
+							<div className=" sm:mt-8 grid grid-cols-3 gap-6">
+								{[5, 2, 1].map((day) => (
+									<div key={day} className="flex flex-col">
+										<Input
+											label={`Скидка за ${day} ${day === 1 ? 'день' : 'дня'}`}
+											type="number"
+											min="0"
+											max="100"
+											placeholder="0"
+											labelPlacement="outside"
+											value={customDiscounts[day.toString()] || ""}
+											onChange={(e) => {
+												const inputValue = e.target.value;
+
+												let value;
+												if (inputValue === "") {
+													value = "";
+												} else {
+													const numValue = parseInt(inputValue, 10) || 0;
+													value = Math.min(100, Math.max(0, numValue));
+												}
+
+												setCustomDiscounts(prev => ({
+													...prev,
+													[day]: value
+												}));
+											}}
+											onBlur={(e) => {
+												if (e.target.value === "") {
+													setCustomDiscounts(prev => ({
+														...prev,
+														[day]: 0
+													}));
+												}
+											}}
+											onKeyDown={(e) => {
+												if (e.key === '-' || e.key === 'e') {
+													e.preventDefault();
+												}
+											}}
+											endContent={
+												<div className="pointer-events-none flex items-center">
+													<span className="text-default-400 text-small">%</span>
+												</div>
+											}
+											classNames={{
+												input: "text-center",
+												label: "text-gray-600"
+											}}
+										/>
+										<span className="text-xs text-gray-500 mt-1 text-center">
+											{day === 5 ? "За 5 дней до истечения срока" :
+												day === 2 ? "За 2 дня до истечения срока" :
+													"В последний день срока годности"}
+										</span>
+									</div>
+								))}
+							</div>
+							<p className="text-xs text-gray-500 mt-4">
+								Укажите процент скидки для каждого периода. Если значение равно 0%, скидка не применяется.
+							</p>
+						</div>
 					)}
 				</ModalBody>
 				<ModalFooter>

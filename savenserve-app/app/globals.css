@@ -18,3 +18,13 @@ body {
   background: var(--background);
   font-family: Montserrat, Arial, sans-serif;
 }
+
+@keyframes swing {
+  0%   { transform: rotate(-2deg);}
+  50%  { transform: rotate(2deg);}
+  100% { transform: rotate(-2deg);}
+}
+.animate-swing {
+  animation: swing 2.5s infinite cubic-bezier(0.4, 0, 0.4, 1);
+  display: inline-block;
+}

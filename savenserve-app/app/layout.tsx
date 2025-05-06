@@ -6,6 +6,7 @@ import {NextUIProvider} from "@nextui-org/react";
 import useAuthStore from "@/store/useAuthStore";
 import {useEffect} from "react";
 import {Toaster} from "sonner";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -47,6 +48,7 @@ export default function RootLayout({
 					<div className="max-w-7xl mx-auto px-5">
 						{children}
 					</div>
+					<Footer />
 				</NextUIProvider>
 			</body>
 		</html>

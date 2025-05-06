@@ -87,8 +87,25 @@ const ItemCard: React.FC<ItemCardProps> = ({
 						<h3 className="font-semibold text-md text-black leading-4 line-clamp-2">{item.name}</h3>
 						<p className="text-sm text-gray-800 leading-4 line-clamp-2 mt-2">{item.brand} | {item.weight}</p>
 						<p className="font-bold text-color-text mt-2">
-							<span className="text-3xl">{Math.floor(item.price)}.</span>
-							<span className="text-xl align-top">{(item.price % 1).toFixed(2).split('.')[1]}р.</span>
+							{item.discount_price < item.price ? (
+								<>
+									<div className="flex items-center gap-2">
+										<span className="line-through text-gray-500 text-lg">{item.price} р.</span>
+										<span className="bg-orange-400 text-white text-xs font-semibold px-2 py-0.5 rounded-full animate-swing">
+											Скидка {Math.round(100 - (item.discount_price / item.price) * 100)}%
+										</span>
+									</div>
+									<div className="text-red-600">
+										<span className="text-3xl">{Math.floor(item.discount_price)}.</span>
+										<span className="text-xl align-top">{(item.discount_price % 1).toFixed(2).split('.')[1]}р.</span>
+									</div>
+								</>
+							) : (
+								<>
+									<span className="text-3xl">{Math.floor(item.price)}.</span>
+									<span className="text-xl align-top">{(item.price % 1).toFixed(2).split('.')[1]}р.</span>
+								</>
+							)}
 						</p>
 					</div>
 				</CardBody>
@@ -123,7 +140,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
 									Добавить в корзину
 								</button>
 							) : (
-								<div className="mx-auto py-1.5 px-2 bg-secondary-color rounded-full flex items-center text-3xl text-color-text gap-8">
+								<div className="mx-auto py-1.5 px-2 bg-secondary-color rounded-full flex items-center text-3xl text-color-text gap-7">
 									<button
 										className="w-9 h-9 flex items-center justify-center text-4xl text-color-text rounded-full border-2 border-color-text active:scale-80 transition-transform duration-150"
 										onClick={(e) => {
@@ -133,7 +150,9 @@ const ItemCard: React.FC<ItemCardProps> = ({
 									>
 										&#8722;
 									</button>
-									<span className="font-semibold">{quantityInCart}</span>
+									<div className="min-w-10 w-10 text-center">
+										<span className="font-semibold">{quantityInCart}</span>
+									</div>
 									<button
 										className="w-9 h-9 flex items-center justify-center text-4xl text-color-text rounded-full border-2 border-color-text active:scale-80 transition-transform duration-150"
 										onClick={(e) => {

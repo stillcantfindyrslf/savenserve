@@ -7,14 +7,17 @@ export type Item = {
   price: number;
   address: string | null;
   best_before: string | null;
-  brand: string | null; 
-  country_of_origin: string | null; 
-  information: string | null; 
-  normal_price: number | null; 
-  price_per_kg: number | null; 
-  weight: string | null; 
+  brand: string | null;
+  country_of_origin: string | null;
+  information: string | null;
+  normal_price: number | null;
+  price_per_kg: number | null;
+  weight: string | null;
   images: string[];
   quantity: number;
+  discount_price: number;
+  custom_discounts?: Record<string, number>;
+  auto_discount: boolean;
 };
 
 export type ItemState = {
