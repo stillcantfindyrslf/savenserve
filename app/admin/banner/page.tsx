@@ -1,10 +1,10 @@
-import AdminItems from "@/components/AdminPanel/AdminItems";
 import AdminLayout from "@/components/AdminPanel/Adminlayout";
+import BannerManager from "@/components/AdminPanel/BannerManager";
 
 export default function AdminItemsPage() {
   return (
     <AdminLayout>
-      <AdminItems />
+      <BannerManager />
     </AdminLayout>
   );
 }

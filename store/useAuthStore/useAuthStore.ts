@@ -7,6 +7,7 @@ const supabase = createClient();
 
 const useAuthStore = create<AuthState>((set, get) => ({
 	isAuthModalOpen: false,
+	users: [],
 	user: null,
 	email: '',
 	password: '',
@@ -273,6 +274,22 @@ const useAuthStore = create<AuthState>((set, get) => ({
 			return data;
 		} catch {
 			return null;
+		}
+	},
+
+	fetchUsers: async () => {
+		try {
+			const { data, error } = await supabase
+				.from('user_profiles')
+				.select('*');
+
+			if (error) throw error;
+
+			set({ users: data || [] });
+			return data;
+		} catch (error) {
+			console.error('Ошибка при загрузке пользователей:', error);
+			return [];
 		}
 	},
 

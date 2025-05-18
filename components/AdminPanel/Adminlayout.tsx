@@ -1,8 +1,7 @@
 'use client';
 
 import React, { ReactNode } from 'react';
-import { MdOutlineInventory2, MdOutlineCategory, MdOutlineDashboard } from 'react-icons/md';
-import { TbReport } from 'react-icons/tb';
+import { MdOutlineInventory2, MdOutlineCategory, MdOutlineDashboard, MdOutlineViewCarousel } from 'react-icons/md';
 import { usePathname, useRouter } from 'next/navigation';
 import FloatingNavbar from '../FloatingNavbar';
 import { Tab, Tabs } from '@nextui-org/react';
@@ -19,14 +18,14 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     { key: 'dashboard', path: '/admin', icon: <MdOutlineDashboard size={20} />, label: 'Дашборд' },
     { key: 'items', path: '/admin/items', icon: <MdOutlineInventory2 size={20} />, label: 'Товары' },
     { key: 'categories', path: '/admin/categories', icon: <MdOutlineCategory size={20} />, label: 'Категории' },
-    { key: 'reports', path: '/admin/reports', icon: <TbReport size={20} />, label: 'Отчеты' },
+    { key: 'banners', path: '/admin/banner', icon: <MdOutlineViewCarousel size={20} />, label: 'Баннеры' },
   ];
 
   const getActiveKey = () => {
     if (pathname === '/admin') return 'dashboard';
     if (pathname === '/admin/items') return 'items';
     if (pathname === '/admin/categories') return 'categories';
-    if (pathname === '/admin/reports') return 'reports';
+    if (pathname === '/admin/banner') return 'banners';
     return 'dashboard';
   };
 
@@ -39,7 +38,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   return (
     <>
-      <FloatingNavbar showSearch={false} searchQuery="" setSearchQuery={() => { }} title="SaveNServe | Админ-панель" />
+      <FloatingNavbar showSearch={false} searchQuery="" setSearchQuery={() => { }} title="SaveNServe | Админ-панель" showCart={false} subtitle={false} subtitleCart={true} />
       <div className="mt-32">
         <div className="mx-auto bg-white rounded-xl shadow-sm py-3 mb-6">
           <Tabs
@@ -50,7 +49,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             variant="underlined"
             classNames={{
               base: "w-full",
-              tabList: "gap-6 w-full px-0",
+              tabList: "gap-6 w-full px-6",
               tab: "h-12 data-[selected=true]:font-medium",
               tabContent: "group-data-[selected=true]:text-primary-color",
               cursor: "w-full h-1 bg-primary-color rounded-xl"

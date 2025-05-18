@@ -3,14 +3,15 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Accordion, AccordionItem, Divider, Spinner, Input } from '@nextui-org/react';
 import useCategoriesStore from '@/store/useCategoriesStore';
-import CategoryModal from './CategoryModal';
-import SubcategoryModal from './SubcategoryModal';
+import CategoryModal from './Modals/CategoryModal';
+import SubcategoryModal from './Modals/SubcategoryModal';
 import { toast } from 'sonner';
 import { AiOutlinePlus, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
 import { Category, Subcategory } from '@/store/useCategoriesStore/types';
-import { getIconByName } from '@/utils/categoryIcons';
+import { getIconByName } from '@/utils/CategoryIcons';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { FiPlus, FiSearch } from 'react-icons/fi';
+import { ErrorType, getErrorMessage } from '@/store/ApiError';
 
 const CategoriesManager = () => {
   const {
@@ -66,8 +67,8 @@ const CategoriesManager = () => {
       try {
         await deleteCategory(category.id);
         toast.success('Категория успешно удалена');
-      } catch (error: any) {
-        toast.error(error.message || 'Не удалось удалить категорию');
+      } catch (error: unknown) {
+        toast.error(getErrorMessage(error as ErrorEvent) || 'Не удалось удалить категорию');
       }
     }
   };
@@ -87,8 +88,8 @@ const CategoriesManager = () => {
       try {
         await deleteSubcategory(subcategory.id);
         toast.success('Подкатегория успешно удалена');
-      } catch (error: any) {
-        toast.error(error.message || 'Не удалось удалить подкатегорию');
+      } catch (error: unknown) {
+        toast.error(getErrorMessage(error as ErrorType) || 'Не удалось удалить подкатегорию');
       }
     }
   };
@@ -166,7 +167,7 @@ const CategoriesManager = () => {
           {filteredCategories.map((category) => (
             <Accordion
               key={category.id}
-                    selectedKeys={isExpanded(category.id.toString()) ? new Set([category.id.toString()]) : new Set([])}
+              selectedKeys={isExpanded(category.id.toString()) ? new Set([category.id.toString()]) : new Set([])}
 
               onSelectionChange={() => toggleAccordion(category.id.toString())}
               className="p-0"
@@ -283,8 +284,7 @@ const CategoriesManager = () => {
                         <Button
                           size="sm"
                           variant="flat"
-                          color="primary"
-                          className="mt-2"
+                          className="mt-2 bg-light-secondary-color text-primary-color border border-primary-color/20"
                           onPress={() => handleAddSubcategory(category.id)}
                           startContent={<AiOutlinePlus size={16} />}
                         >

@@ -4,14 +4,32 @@ import React, { useEffect, useState } from 'react';
 import { Button, Input, Spinner, Accordion, AccordionItem } from '@nextui-org/react';
 import useItemsStore from '@/store/useItemStore';
 import useCategoriesStore from '@/store/useCategoriesStore';
-import CreateItemModal from "./AdminItemModal";
+import CreateItemModal from "./Modals/AdminItemModal";
 import useAdminStore from "@/store/useAdminStore";
 import ItemCard from '../ItemCard';
 import { ItemWithImages } from '@/store/useItemStore/types';
 import { FiSearch, FiPlus } from 'react-icons/fi';
 import { BiCategory } from 'react-icons/bi';
 import { MdKeyboardArrowDown } from 'react-icons/md';
-import { getIconByName } from '@/utils/categoryIcons';
+import { getIconByName } from '@/utils/CategoryIcons';
+import { Category, Subcategory } from '@/store/useCategoriesStore/types';
+
+interface GroupedSubcategory {
+	subcategory: Subcategory;
+	items: ItemWithImages[];
+}
+
+interface GroupedCategory {
+	category: Category;
+	items: ItemWithImages[];
+	subcategories: {
+		[subcategoryId: number]: GroupedSubcategory;
+	};
+}
+
+interface GroupedItems {
+	[categoryId: number]: GroupedCategory;
+}
 
 const AdminItems = () => {
 	const { items, deleteItem, fetchItems, isLoading } = useItemsStore();
@@ -21,19 +39,7 @@ const AdminItems = () => {
 	const [filteredItems, setFilteredItems] = useState<ItemWithImages[]>([]);
 	const [uncategorizedItems, setUncategorizedItems] = useState<ItemWithImages[]>([]);
 	const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set(["all"]));
-
-	const [groupedItems, setGroupedItems] = useState<{
-		[categoryId: number]: {
-			category: any,
-			items: ItemWithImages[],
-			subcategories: {
-				[subcategoryId: number]: {
-					subcategory: any,
-					items: ItemWithImages[]
-				}
-			}
-		}
-	}>({});
+	const [groupedItems, setGroupedItems] = useState<GroupedItems>({});
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -51,7 +57,7 @@ const AdminItems = () => {
 				)
 				: items;
 
-			const grouped: any = {};
+			const grouped: GroupedItems = {};
 			const uncategorized: ItemWithImages[] = [];
 
 			itemsToFilter.forEach(item => {
@@ -77,7 +83,7 @@ const AdminItems = () => {
 				if (item.subcategory_id) {
 					if (!grouped[item.category_id].subcategories[item.subcategory_id]) {
 						const subcategory = grouped[item.category_id].category.subcategories.find(
-							(s: any) => s.id === item.subcategory_id
+							(s: Subcategory) => s.id === item.subcategory_id
 						);
 
 						if (subcategory) {
@@ -112,7 +118,7 @@ const AdminItems = () => {
 		setCurrentItem({
 			category_id: categoryId || null,
 			subcategory_id: subcategoryId || null
-		} as any);
+		} as ItemWithImages);
 		openModal();
 	};
 
@@ -278,7 +284,7 @@ const AdminItems = () => {
 											<div>
 												<p className="text-sm text-gray-600 mb-3 font-medium">Без подкатегории:</p>
 												<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-													{items.map((item) => (
+													{items.map((item: ItemWithImages) => (
 														<ItemCard
 															key={item.id}
 															item={item}
@@ -291,26 +297,29 @@ const AdminItems = () => {
 											</div>
 										)}
 
-										{Object.entries(subcategories).map(([subcategoryId, { subcategory, items }]) => (
-											<div key={subcategoryId} className="pt-2">
-												<div className="flex items-center mb-3">
-													<h3 className="text-md font-medium text-gray-700">{subcategory.name}</h3>
-													<span className="text-gray-600 text-sm ml-2">({items.length})</span>
-												</div>
+										{Object.entries(subcategories).map(([subcategoryId, subData]) => {
+											const { subcategory, items } = subData as GroupedSubcategory;
+											return (
+												<div key={subcategoryId} className="pt-2">
+													<div className="flex items-center mb-3">
+														<h3 className="text-md font-medium text-gray-700">{subcategory.name}</h3>
+														<span className="text-gray-600 text-sm ml-2">({items.length})</span>
+													</div>
 
-												<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-													{items.map((item) => (
-														<ItemCard
-															key={item.id}
-															item={item}
-															isAdmin={true}
-															onEdit={() => handleEdit(item)}
-															onDelete={deleteItem}
-														/>
-													))}
+													<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+														{items.map((item: ItemWithImages) => (
+															<ItemCard
+																key={item.id}
+																item={item}
+																isAdmin={true}
+																onEdit={() => handleEdit(item)}
+																onDelete={deleteItem}
+															/>
+														))}
+													</div>
 												</div>
-											</div>
-										))}
+											);
+										})}
 									</div>
 								</AccordionItem>
 							</Accordion>

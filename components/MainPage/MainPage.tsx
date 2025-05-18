@@ -7,6 +7,7 @@ import useItemsStore from "@/store/useItemStore";
 import useCartStore from "@/store/useCartStore";
 import SidebarCategory from "@/components/SidebarCategory";
 import useCategoriesStore from "@/store/useCategoriesStore/useCategoriesStore";
+import AppSlider from "../AppSlider";
 
 export default function MainPage() {
 	const { items, fetchItems } = useItemsStore();
@@ -16,11 +17,11 @@ export default function MainPage() {
 	const [filteredItems, setFilteredItems] = useState(items);
 
 	useEffect(() => {
-    const fetchData = async () => {
-        await Promise.all([fetchItems(), fetchCartItems(), fetchCategories()]);
-    };
-    fetchData();
-}, [fetchItems, fetchCartItems, fetchCategories]);
+		const fetchData = async () => {
+			await Promise.all([fetchItems(), fetchCartItems(), fetchCategories()]);
+		};
+		fetchData();
+	}, [fetchItems, fetchCartItems, fetchCategories]);
 
 	useEffect(() => {
 		const filtered = items.filter((item) =>
@@ -32,7 +33,8 @@ export default function MainPage() {
 	return (
 		<>
 			<FloatingNavbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-			<div className="flex mt-32">
+			<AppSlider />
+			<div className="flex mt-8">
 				<div className="w-1/4 pr-4">
 					<SidebarCategory categories={categories} />
 				</div>

@@ -6,6 +6,7 @@ import { IoCloseOutline } from 'react-icons/io5';
 import useCategoriesStore from '@/store/useCategoriesStore';
 import { toast } from 'sonner';
 import { Subcategory } from '@/store/useCategoriesStore/types';
+import { ErrorType, getErrorMessage } from '@/store/ApiError';
 
 const SubcategoryModal = () => {
   const {
@@ -83,8 +84,8 @@ const SubcategoryModal = () => {
 
       await fetchCategories();
       closeSubcategoryModal();
-    } catch (error: any) {
-      toast.error(error.message || 'Произошла ошибка при сохранении подкатегории');
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error as ErrorType) || 'Произошла ошибка при сохранении подкатегории');
     } finally {
       setIsLoading(false);
     }

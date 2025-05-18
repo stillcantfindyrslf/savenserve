@@ -7,10 +7,12 @@ export interface UserProfile {
 	email: string;
 	is_subscribed?: boolean;
 	role: 'ADMIN' | 'USER';
+	created_at: string;
 }
 
 export interface AuthState {
 	isAuthModalOpen: boolean;
+	users: UserProfile[];
 	user: any | null;
 	email: string,
 	password: string,
@@ -36,4 +38,5 @@ export interface AuthState {
 	sendEmailConfirmation: (email: string) => Promise<{ success: boolean, error?: string }>;
 	updateSubscription: (isSubscribed: boolean) => Promise<{ success: boolean, error?: string }>;
 	fetchUserProfile: () => Promise<any | null>;
+	fetchUsers: () => Promise<UserProfile[]>;
 }

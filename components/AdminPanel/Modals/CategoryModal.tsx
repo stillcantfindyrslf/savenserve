@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Radio, RadioGroup, Select, SelectItem, Textarea } from '@nextui-org/react';
+import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Textarea } from '@nextui-org/react';
 import { IoCloseOutline } from 'react-icons/io5';
 import useCategoriesStore from '@/store/useCategoriesStore';
 import { toast } from 'sonner';
 import { Category } from '@/store/useCategoriesStore/types';
-import { categoryIcons, getIconByName } from '@/utils/categoryIcons';
+import { categoryIcons, getIconByName } from '@/utils/CategoryIcons';
+import { ErrorType, getErrorMessage } from '@/store/ApiError';
 
 const CategoryModal = () => {
   const {
@@ -82,8 +83,8 @@ const CategoryModal = () => {
 
       await fetchCategories();
       closeCategoryModal();
-    } catch (error: any) {
-      toast.error(error.message || 'Произошла ошибка при сохранении категории');
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error as ErrorType) || 'Произошла ошибка при сохранении категории');
     } finally {
       setIsLoading(false);
     }
