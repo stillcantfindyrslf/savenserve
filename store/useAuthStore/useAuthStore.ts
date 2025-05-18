@@ -21,6 +21,30 @@ const useAuthStore = create<AuthState>((set, get) => ({
 	setEmail: (email) => set({ email }),
 	setPassword: (password) => set({ password }),
 
+	ensureUserProfile: async (user) => {
+		if (!user) return { success: false, error: 'Пользователь не определен' };
+
+		try {
+			// Используем upsert для создания или обновления профиля
+			const { error } = await supabase
+				.from('user_profiles')
+				.upsert(
+					{
+						id: user.id,
+						email: user.email,
+						updated_at: new Date().toISOString()
+					},
+					{ onConflict: 'id' }
+				);
+
+			if (error) throw error;
+			return { success: true };
+		} catch (error) {
+			console.error('Ошибка при создании/обновлении профиля пользователя:', error);
+			return { success: false, error: 'Ошибка при создании профиля' };
+		}
+	},
+
 	handleAuth: async (email: string, password: string) => {
 		set({ loading: true, error: '' });
 		try {
@@ -28,15 +52,11 @@ const useAuthStore = create<AuthState>((set, get) => ({
 			if (isLogin) {
 				const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 				if (error) throw error;
+
+				await get().ensureUserProfile(data.user);
+
 				set({ user: data.user, isAuthModalOpen: false });
 			} else {
-				const { data: existingUser } = await supabase.auth.signUp({ email, password });
-
-				if (existingUser.user) {
-					set({ error: "Пользователь с таким email уже зарегистрирован" });
-					return;
-				}
-
 				const { data, error } = await supabase.auth.signUp({ email, password });
 				if (error) throw error;
 
@@ -44,20 +64,23 @@ const useAuthStore = create<AuthState>((set, get) => ({
 				set({ isAuthModalOpen: false });
 
 				if (data.user) {
-					set({ user: data.user });
+					// Используем ensureUserProfile вместо прямого создания профиля
+					await get().ensureUserProfile(data.user);
+
+					// set({ user: data.user });
 				}
 			}
-    } catch (error) {
-      const err = error as AuthError;
-      if (err.message === "User already registered") {
-        set({ error: "Пользователь с таким email уже зарегистрирован" });
-      } else if (err.message === "Invalid login credentials") {
-        set({ error: "Неверный email или пароль" });
-      } else if (err.message.includes("Email not confirmed")) {
-        set({ error: "Email не подтвержден. Пожалуйста, проверьте вашу почту." });
-      } else {
-        set({ error: err.message });
-      }
+		} catch (error) {
+			const err = error as AuthError;
+			if (err.message === "User already registered") {
+				set({ error: "Пользователь с таким email уже зарегистрирован" });
+			} else if (err.message === "Invalid login credentials") {
+				set({ error: "Неверный email или пароль" });
+			} else if (err.message.includes("Email not confirmed")) {
+				set({ error: "Email не подтвержден. Пожалуйста, проверьте вашу почту." });
+			} else {
+				set({ error: err.message });
+			}
 		} finally {
 			set({ loading: false });
 		}
@@ -67,7 +90,6 @@ const useAuthStore = create<AuthState>((set, get) => ({
 		try {
 			const { error } = await supabase.auth.signOut();
 			if (error) throw error;
-			set({ user: null });
 		} catch (error) {
 			const err = error as AuthError;
 			console.error('Logout error:', err.message);
@@ -75,7 +97,12 @@ const useAuthStore = create<AuthState>((set, get) => ({
 	},
 
 	subscribeToAuthChanges: () => {
-		supabase.auth.onAuthStateChange((event, session) => {
+		supabase.auth.onAuthStateChange(async (event, session) => {
+			if (session?.user) {
+				await get().ensureUserProfile(session.user);
+
+				await get().fetchUserProfile();
+			}
 			set({ user: session?.user || null });
 		});
 	},

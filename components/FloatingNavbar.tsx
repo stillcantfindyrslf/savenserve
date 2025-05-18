@@ -24,6 +24,7 @@ import { FiSearch } from "react-icons/fi";
 import useAuthStore from "@/store/useAuthStore";
 import useCartStore from "@/store/useCartStore";
 import AuthModal from "@/components/AuthModal";
+import { useRoleCheck } from '@/hooks/useRoleCheck';
 import { toast } from "sonner";
 
 const menuItems = [
@@ -62,6 +63,7 @@ const FloatingNavbar: React.FC<NavbarProps> = ({
 }) => {
 	const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 	const { user, openAuthModal, handleLogout } = useAuthStore();
+	const { isAdmin } = useRoleCheck();
 	const { cartItems } = useCartStore();
 
 	const totalItemsInCart = cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -203,9 +205,13 @@ const FloatingNavbar: React.FC<NavbarProps> = ({
 												<p className="font-semibold">Вошел как</p>
 												<p>{user.email}</p>
 											</DropdownItem>
-											<DropdownItem key="profile"  href="/profile">Профиль</DropdownItem>
-											<DropdownItem key="favorites"  href="/favorites">Понравившееся</DropdownItem>
-											<DropdownItem key="admin"  href="/admin">Админ панель</DropdownItem>
+											<DropdownItem key="profile" href="/profile">Профиль</DropdownItem>
+											<DropdownItem key="favorites" href="/favorites">Понравившееся</DropdownItem>
+											{isAdmin && (
+												<DropdownItem key="admin" href="/admin">
+													Админ-панель
+												</DropdownItem>
+											)}
 											<DropdownItem key="logout" color="danger" onPress={handleLogout}>
 												Выйти
 											</DropdownItem>

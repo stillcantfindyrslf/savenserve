@@ -26,12 +26,12 @@ export default function RootLayout({
 	}, [subscribeToAuthChanges]);
 
 	return (
-		<html lang="en" className="bg-background-color">
+		<html lang="ru" className="bg-background-color">
 			<body
 				className={`${montserrat.variable}`}
 			>
 				<NextUIProvider>
-					<Toaster position='bottom-right' richColors closeButton expand visibleToasts={1} duration={2000} />
+					<Toaster position='bottom-right' richColors closeButton expand visibleToasts={1} duration={3000} />
 					<div className="max-w-7xl mx-auto px-5">
 						{children}
 					</div>

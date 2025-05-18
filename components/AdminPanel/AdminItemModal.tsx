@@ -353,7 +353,7 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 										label="Цена"
 										type="number"
 										placeholder="Введите цену"
-										value={currentItem?.price.toString() || ''}
+										value={currentItem?.price?.toString() || ''}
 										onChange={(e) =>
 											setCurrentItem({
 												...(currentItem || initialItem),
@@ -394,7 +394,7 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 										label="Количество"
 										type="number"
 										placeholder="Введите количество"
-										value={currentItem?.quantity.toString() || ''}
+										value={currentItem?.quantity?.toString() || ''}
 										onChange={(e) =>
 											setCurrentItem({
 												...(currentItem || initialItem),
