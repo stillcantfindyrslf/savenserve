@@ -19,6 +19,13 @@ export default {
         "color-text": "var(--text-color)",
         "light-white-color": "var(--light-white)",
       },
+      screens: {
+        'cards-xs': '450px',
+        'cards-sm': '660px',
+        'cards-md': '781px',
+        'cards-lg': '977px',
+        'cards-xl': '1182px',
+      },
     },
   },
   plugins: [nextui()],

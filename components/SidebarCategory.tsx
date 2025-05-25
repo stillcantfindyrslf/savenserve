@@ -9,29 +9,42 @@ interface SidebarCategoryProps {
 	categories: Category[];
 	activeCategoryUrlName?: string;
 	onSelectFavorites?: () => void;
+	onCategoryClick?: () => void;
 }
 
 const SidebarCategory: FC<SidebarCategoryProps> = ({
 	categories,
 	activeCategoryUrlName,
-	onSelectFavorites
+	onSelectFavorites,
+	onCategoryClick
 }) => {
 	const router = useRouter();
 	const { user } = useAuthStore();
 
+	const handleCategoryClick = (urlName: string) => {
+		router.push(`/category/${urlName}`);
+		if (onCategoryClick) {
+			onCategoryClick();
+		}
+	};
+
+	const handleFavoritesClick = () => {
+		if (onSelectFavorites) {
+			onSelectFavorites();
+		} else {
+			router.push('/category/favorites?view=favorites');
+		}
+		if (onCategoryClick) {
+			onCategoryClick();
+		}
+	};
+
 	return (
-		<>
+		<div className="min-w-[230px] w-full">
 			<h2 className="text-lg px-3 mb-2">Категории</h2>
 			{user && (
 				<div
-					onClick={(e) => {
-						e.preventDefault();
-						if (onSelectFavorites) {
-							onSelectFavorites();
-						} else {
-							router.push('/category/favorites?view=favorites');
-						}
-					}}
+					onClick={handleFavoritesClick}
 					className={`flex items-center cursor-pointer px-2 py-2 text-gray-700 gap-2 rounded-md transition-colors ${activeCategoryUrlName === 'favorites'
 						? "border-2 border-primary-color bg-white"
 						: "hover:bg-white"
@@ -47,7 +60,7 @@ const SidebarCategory: FC<SidebarCategoryProps> = ({
 				{categories.map((category) => (
 					<div
 						key={`category-${category.id}`}
-						onClick={() => router.push(`/category/${category.url_name}`)}
+						onClick={() => handleCategoryClick(category.url_name)}
 						className={`flex items-center cursor-pointer px-2 py-2 text-gray-700 gap-2 rounded-md transition-colors ${activeCategoryUrlName === category.url_name
 							? "border-2 border-primary-color bg-white"
 							: "hover:bg-white"
@@ -60,7 +73,7 @@ const SidebarCategory: FC<SidebarCategoryProps> = ({
 					</div>
 				))}
 			</div>
-		</>
+		</div>
 	);
 };
 

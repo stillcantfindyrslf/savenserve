@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardBody, CardFooter, Image, useDisclosure, Button } from '@nextui-org/react';
+import { useDisclosure, Image } from '@nextui-org/react';
 import { Item, ItemWithImages } from '@/store/useItemStore/types';
 import useAuthStore from '@/store/useAuthStore';
 import useCartStore from '@/store/useCartStore';
@@ -68,26 +68,29 @@ const ItemCard: React.FC<ItemCardProps> = ({
 		}
 	};
 
+	const handleCardClick = () => {
+		if (!isAdmin) {
+			onOpen();
+		}
+	};
+
 	return (
 		<>
-			<Card
-				disableRipple
-				isPressable={!isAdmin}
-				className="rounded-xl p-0 duration-300 ease-in-out"
-				shadow="none"
-				key={item.id}
-				onClick={onOpen}
+			<div
+				className={`bg-white rounded-xl shadow-sm overflow-hidden transition duration-300 ease-in-out flex flex-col h-full ${!isAdmin ? 'cursor-pointer' : ''}`}
+				onClick={handleCardClick}
 			>
-				<CardBody className="p-2">
-					<Image
-						isBlurred
-						width="100%"
-						height="100%"
-						alt={item.name}
-						src={imageUrl}
-						className="h-full object-cover object-center rounded-xl"
-					/>
-					<div className="flex flex-col items-center mt-4 text-center">
+				<div className="p-2">
+					<div className="aspect-square w-full overflow-hidden rounded-xl bg-gray-100 relative">
+						<Image
+							alt={item.name}
+							src={imageUrl}
+							className="h-full w-full object- object-center rounded-xl"
+							loading="lazy"
+						/>
+					</div>
+
+					<div className="flex flex-col flex-grow items-center mt-4 text-center flex-grow justify-between">
 						<h3 className="font-semibold text-md text-black leading-4 line-clamp-2">{item.name}</h3>
 						<p className="text-sm text-gray-800 leading-4 line-clamp-2 mt-2">{item.brand} | {item.weight}</p>
 						<p className="font-bold text-color-text mt-2">
@@ -112,24 +115,24 @@ const ItemCard: React.FC<ItemCardProps> = ({
 							)}
 						</p>
 					</div>
-				</CardBody>
-				<CardFooter className="p-2 pt-0">
+				</div>
+				<div className="p-2 mt-auto">
 					{isAdmin ? (
 						<div className="flex w-full gap-2">
-							<Button
-								className="bg-light-secondary-color text-gray-700 flex-1 items-center gap-1"
-								onPress={handleEdit}
-								startContent={<HiOutlinePencilAlt size={17} />}
+							<button
+								className="bg-light-secondary-color text-gray-700 flex-1 h-10 rounded-md flex items-center justify-center gap-1 hover:bg-opacity-80"
+								onClick={handleEdit}
 							>
-								Изменить
-							</Button>
-							<Button
-								className="bg-red-100 text-red-600 flex-1 hover:bg-red-200 items-center gap-1"
-								onPress={handleDelete}
-								startContent={<FaRegTrashCan size={16} />}
+								<HiOutlinePencilAlt size={17} />
+								<span>Изменить</span>
+							</button>
+							<button
+								className="bg-red-100 text-red-600 flex-1 h-10 rounded-md flex items-center justify-center gap-1 hover:bg-red-200"
+								onClick={handleDelete}
 							>
-								Удалить
-							</Button>
+								<FaRegTrashCan size={16} />
+								<span>Удалить</span>
+							</button>
 						</div>
 					) : (
 						<>
@@ -144,7 +147,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
 									Добавить в корзину
 								</button>
 							) : (
-								<div className="mx-auto py-1.5 px-2 bg-secondary-color rounded-full flex items-center text-3xl text-color-text gap-7">
+								<div className="mx-auto py-1.5 px-2 bg-secondary-color rounded-full flex items-center justify-between text-3xl text-color-text w-full">
 									<button
 										className="w-9 h-9 flex items-center justify-center text-4xl text-color-text rounded-full border-2 border-color-text active:scale-80 transition-transform duration-150"
 										onClick={(e) => {
@@ -170,8 +173,8 @@ const ItemCard: React.FC<ItemCardProps> = ({
 							)}
 						</>
 					)}
-				</CardFooter>
-			</Card>
+				</div>
+			</div>
 
 			<ItemDetailModal isOpen={isOpen} onOpenChange={onClose} item={item} user={user} />
 		</>

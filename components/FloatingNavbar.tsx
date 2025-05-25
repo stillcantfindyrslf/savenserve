@@ -11,8 +11,6 @@ import {
 	NavbarBrand,
 	NavbarContent,
 	Input,
-	NavbarMenu,
-	NavbarMenuItem,
 	Avatar,
 	Badge
 } from "@nextui-org/react";
@@ -26,19 +24,8 @@ import useCartStore from "@/store/useCartStore";
 import AuthModal from "@/components/AuthModal";
 import { useRoleCheck } from '@/hooks/useRoleCheck';
 import { toast } from "sonner";
-
-const menuItems = [
-	"Profile",
-	"Dashboard",
-	"Activity",
-	"Analytics",
-	"System",
-	"Deployments",
-	"My Settings",
-	"Team Settings",
-	"Help & Feedback",
-	"Log Out",
-];
+import MobileCategoryDrawer from "./MobileCategoryDrawer";
+import useCategoriesStore from "@/store/useCategoriesStore/useCategoriesStore";
 
 interface NavbarProps {
 	title?: string;
@@ -61,7 +48,8 @@ const FloatingNavbar: React.FC<NavbarProps> = ({
 	searchQuery,
 	setSearchQuery
 }) => {
-	const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+	const [isCategoryDrawerOpen, setIsCategoryDrawerOpen] = React.useState(false);
+	const { categories } = useCategoriesStore();
 	const { user, openAuthModal, handleLogout } = useAuthStore();
 	const { isAdmin } = useRoleCheck();
 	const { cartItems } = useCartStore();
@@ -96,20 +84,25 @@ const FloatingNavbar: React.FC<NavbarProps> = ({
 		window.location.href = "/cart";
 	};
 
+	const handleBurgerClick = () => {
+		setIsCategoryDrawerOpen(true);
+	};
+
 	return (
 		<div className="fixed top-0 left-0 right-0 h-auto bg-background-color z-50">
 			<div className="mt-5 mb-5 px-5 mx-auto z-50 max-w-7xl">
 				<Navbar
 					maxWidth="xl"
 					className="px-4 rounded-2xl w-full h-20 bg-primary-color"
-					isMenuOpen={isMenuOpen}
-					onMenuOpenChange={setIsMenuOpen}
 				>
-					<RxHamburgerMenu
-						size="24"
-						className="text-light-white-color cursor-pointer"
-						onClick={() => setIsMenuOpen(!isMenuOpen)}
-					/>
+					<div className="hidden max-md:block">
+						<RxHamburgerMenu
+							size="24"
+							className="text-light-white-color cursor-pointer"
+							onClick={handleBurgerClick}
+						/>
+					</div>
+
 					<NavbarContent>
 						<NavbarBrand className="ml-2">
 							<Link href="/" className="flex items-center">
@@ -225,24 +218,14 @@ const FloatingNavbar: React.FC<NavbarProps> = ({
 							</Dropdown>
 						)}
 					</NavbarContent>
-					<NavbarMenu>
-						{menuItems.map((item, index) => (
-							<NavbarMenuItem key={`${item}-${index}`}>
-								<Link
-									className="w-full"
-									color={
-										index === 2 ? "warning" : index === menuItems.length - 1 ? "danger" : "foreground"
-									}
-									href="#"
-								>
-									{item}
-								</Link>
-							</NavbarMenuItem>
-						))}
-					</NavbarMenu>
 				</Navbar>
 			</div>
 			<AuthModal />
+			<MobileCategoryDrawer
+				isOpen={isCategoryDrawerOpen}
+				onClose={() => setIsCategoryDrawerOpen(false)}
+				categories={categories}
+			/>
 		</div>
 	);
 };

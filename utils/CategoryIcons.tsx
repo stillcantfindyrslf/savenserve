@@ -32,3 +32,14 @@ export const getIconByName = (iconName: string | null): JSX.Element | null => {
 export const getIconNames = (): { name: string; label: string }[] => {
   return categoryIcons.map(icon => ({ name: icon.name, label: icon.label }));
 };
+
+export const formatDate = (dateString: string): string => {
+  if (!dateString) return '';
+
+  const date = new Date(dateString);
+  return date.toLocaleDateString('ru-RU', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};

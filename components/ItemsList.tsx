@@ -20,7 +20,7 @@ const ItemsList: FC<ItemCardProps> = ({ items }) => {
 	}
 
 	return (
-		<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2">
+		<div className="grid grid-cols-1 cards-xs:grid-cols-2 cards-sm:grid-cols-3 cards-md:grid-cols-2 cards-lg:grid-cols-3 cards-xl:grid-cols-4 gap-3">
 			{items.map((item) => (
 				<ItemCard
 					key={item.id}
