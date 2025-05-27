@@ -26,6 +26,7 @@ import { useRoleCheck } from '@/hooks/useRoleCheck';
 import { toast } from "sonner";
 import MobileCategoryDrawer from "./MobileCategoryDrawer";
 import useCategoriesStore from "@/store/useCategoriesStore/useCategoriesStore";
+import { useRouter } from "next/navigation";
 
 interface NavbarProps {
 	title?: string;
@@ -53,6 +54,7 @@ const FloatingNavbar: React.FC<NavbarProps> = ({
 	const { user, openAuthModal, handleLogout } = useAuthStore();
 	const { isAdmin } = useRoleCheck();
 	const { cartItems } = useCartStore();
+	const router = useRouter();
 
 	const totalItemsInCart = cartItems.reduce((total, item) => total + item.quantity, 0);
 
@@ -81,7 +83,7 @@ const FloatingNavbar: React.FC<NavbarProps> = ({
 			toast.warning("Нужно войти, чтобы увидеть корзину.")
 			return;
 		}
-		window.location.href = "/cart";
+		router.push("/cart");
 	};
 
 	const handleBurgerClick = () => {

@@ -26,7 +26,6 @@ const useAuthStore = create<AuthState>((set, get) => ({
 		if (!user) return { success: false, error: 'Пользователь не определен' };
 
 		try {
-			// Используем upsert для создания или обновления профиля
 			const { error } = await supabase
 				.from('user_profiles')
 				.upsert(

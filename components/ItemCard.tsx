@@ -93,7 +93,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
 					<div className="flex flex-col flex-grow items-center mt-4 text-center flex-grow justify-between">
 						<h3 className="font-semibold text-md text-black leading-4 line-clamp-2">{item.name}</h3>
 						<p className="text-sm text-gray-800 leading-4 line-clamp-2 mt-2">{item.brand} | {item.weight}</p>
-						<p className="font-bold text-color-text mt-2">
+						<div className="font-bold text-color-text mt-2">
 							{item.discount_price < item.price ? (
 								<>
 									<div className="flex items-center gap-2">
@@ -113,7 +113,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
 									<span className="text-xl align-top">{(item.price % 1).toFixed(2).split('.')[1]}р.</span>
 								</>
 							)}
-						</p>
+						</div>
 					</div>
 				</div>
 				<div className="p-2 mt-auto">
