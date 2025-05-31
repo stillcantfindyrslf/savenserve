@@ -16,6 +16,7 @@ import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import Link from "next/link";
 
 interface BurgerMenuProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   user: any;
   isAdmin?: boolean;
   searchQuery: string;

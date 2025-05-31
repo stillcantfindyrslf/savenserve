@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useMemo, useRef, ReactNode } from 'react';
+import React, { useEffect, useState, useMemo, useRef, ReactNode, useCallback } from 'react';
 import { Card, CardBody, CardHeader, CardFooter, Divider, Spinner, Button, Progress, Input, Chip } from '@nextui-org/react';
 import { MdInventory, MdOutlineCategory, MdArrowForward, MdTrendingUp, MdPerson, MdSearch } from 'react-icons/md';
 import { FaUsers, FaExclamationTriangle, FaTags, FaBoxOpen } from 'react-icons/fa';
@@ -67,7 +67,7 @@ const AdminDashboard = () => {
 
   const totalInventoryValue = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setStatsLoaded(false);
     try {
       const promises = [];
@@ -85,11 +85,11 @@ const AdminDashboard = () => {
     } finally {
       setStatsLoaded(true);
     }
-  };
+  }, [fetchItems, fetchCategories, fetchUsers])
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
