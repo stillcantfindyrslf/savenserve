@@ -144,7 +144,8 @@ const ItemCard: React.FC<ItemCardProps> = ({
 										handleAddToCart();
 									}}
 								>
-									Добавить в корзину
+									<span className="hidden sm:inline">Добавить в корзину</span>
+									<span className="inline sm:hidden">В корзину</span>
 								</button>
 							) : (
 								<div className="mx-auto py-1.5 px-2 bg-secondary-color rounded-full flex items-center justify-between text-3xl text-color-text w-full">

@@ -38,7 +38,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   return (
     <>
-      <FloatingNavbar showSearch={false} searchQuery="" setSearchQuery={() => { }} title="SaveNServe | Админ-панель" showCart={false} subtitle={false} subtitleCart={true} />
+      <FloatingNavbar showSearch={false} searchQuery="" setSearchQuery={() => { }} title="SaveNServe | Админ-панель" showCart={false} subtitle={false} />
       <div className="mt-32">
         <div className="mx-auto bg-white rounded-xl shadow-sm py-3 mb-6">
           <Tabs

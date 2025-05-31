@@ -56,6 +56,7 @@ const useAuthStore = create<AuthState>((set, get) => ({
 				await get().ensureUserProfile(data.user);
 
 				set({ user: data.user, isAuthModalOpen: false });
+				toast.success("Вход на аккаунт выполнен успешно.");
 			} else {
 				const { data, error } = await supabase.auth.signUp({ email, password });
 				if (error) throw error;
@@ -64,7 +65,6 @@ const useAuthStore = create<AuthState>((set, get) => ({
 				set({ isAuthModalOpen: false });
 
 				if (data.user) {
-					// Используем ensureUserProfile вместо прямого создания профиля
 					await get().ensureUserProfile(data.user);
 
 					// set({ user: data.user });
@@ -90,6 +90,9 @@ const useAuthStore = create<AuthState>((set, get) => ({
 		try {
 			const { error } = await supabase.auth.signOut();
 			if (error) throw error;
+
+			set({ user: null })
+			toast.info("Выход из аккаунта произошел успешно.");
 		} catch (error) {
 			const err = error as AuthError;
 			console.error('Logout error:', err.message);
@@ -98,12 +101,20 @@ const useAuthStore = create<AuthState>((set, get) => ({
 
 	subscribeToAuthChanges: () => {
 		supabase.auth.onAuthStateChange(async (event, session) => {
-			if (session?.user) {
-				await get().ensureUserProfile(session.user);
+			const prevUser = get().user;
 
+			if (session?.user) {
+				if (prevUser && prevUser.id === session.user.id) {
+					return;
+				}
+
+				await get().ensureUserProfile(session.user);
 				await get().fetchUserProfile();
 			}
-			set({ user: session?.user || null });
+
+			if (!prevUser || !session?.user || prevUser.id !== session.user.id) {
+				set({ user: session?.user || null });
+			}
 		});
 	},
 

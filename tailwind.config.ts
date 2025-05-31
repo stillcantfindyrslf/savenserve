@@ -20,7 +20,7 @@ export default {
         "light-white-color": "var(--light-white)",
       },
       screens: {
-        'cards-xs': '450px',
+        'cards-xs': '390px',
         'cards-sm': '660px',
         'cards-md': '781px',
         'cards-lg': '977px',
