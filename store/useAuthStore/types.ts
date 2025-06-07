@@ -19,7 +19,6 @@ export interface AuthState {
 	loading: boolean;
 	error: string;
 	isLogin: boolean;
-	
 
 	openAuthModal: () => void;
 	closeAuthModal: () => void;

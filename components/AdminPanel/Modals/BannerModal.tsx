@@ -25,7 +25,6 @@ const BannerModal = () => {
   const [buttonLink, setButtonLink] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [isActive, setIsActive] = useState(true);
-  const [orderIndex, setOrderIndex] = useState(0);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -38,7 +37,6 @@ const BannerModal = () => {
       setButtonLink(currentBanner.button_link || '');
       setImageUrl(currentBanner.image_url || '');
       setIsActive(currentBanner.is_active);
-      setOrderIndex(currentBanner.order_index || 0);
       setPreviewImage(currentBanner.image_url || null);
     } else {
       setTitle('');
@@ -47,7 +45,6 @@ const BannerModal = () => {
       setButtonLink('');
       setImageUrl('');
       setIsActive(true);
-      setOrderIndex(0);
       setImageFile(null);
       setPreviewImage(null);
     }
@@ -99,7 +96,6 @@ const BannerModal = () => {
         button_link: buttonLink.trim() || null,
         image_url: finalImageUrl,
         is_active: isActive,
-        order_index: orderIndex
       };
 
       if (currentBanner?.id) {
@@ -238,14 +234,6 @@ const BannerModal = () => {
               </div>
 
               <div className="grid grid-cols-2 gap-2">
-                <Input
-                  type="number"
-                  label="Порядковый номер"
-                  placeholder="Порядок отображения"
-                  value={orderIndex.toString()}
-                  onChange={(e) => setOrderIndex(parseInt(e.target.value) || 0)}
-                />
-
                 <div className="flex flex-col">
                   <span className="text-sm text-gray-700 font-medium mb-1">Статус</span>
                   <div className="flex items-center gap-2 h-[40px]">
@@ -263,7 +251,6 @@ const BannerModal = () => {
               </div>
 
               <div className="text-xs text-gray-500">
-                <p>• Баннеры с меньшим порядковым номером отображаются первыми</p>
                 <p>• Неактивные баннеры не будут отображаться на сайте</p>
               </div>
             </div>

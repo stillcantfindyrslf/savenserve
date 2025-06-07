@@ -116,7 +116,7 @@ const CategoriesManager = () => {
   if (isLoading && categories.length === 0) {
     return (
       <div className="flex justify-center items-center py-20">
-        <Spinner size="lg" color="primary" />
+        <Spinner size="lg" color="success" />
       </div>
     );
   }

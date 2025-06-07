@@ -73,7 +73,7 @@ const BannerManager = () => {
   if (!isInitialized) {
     return (
       <div className="flex justify-center items-center py-20">
-        <Spinner size="lg" color="primary" />
+        <Spinner size="lg" color="success" />
       </div>
     );
   }
@@ -116,11 +116,11 @@ const BannerManager = () => {
           </Button>
         </div>
       ) : (
-        <Card className="border-none overflow-hidden rounded-xl">
+        <Card className="border-none overflow-hidden rounded-xl shadow-none">
           <div className="overflow-x-auto">
             <table className="w-full min-w-full">
               <thead>
-                <tr className="bg-white border-b border-gray-200">
+                <tr className="bg-gray-100 border-b border-gray-200">
                   <th className="text-left py-4 px-8 font-medium text-sm text-gray-600 uppercase tracking-wider">Баннер</th>
                   <th className="text-left py-4 px-6 font-medium text-sm text-gray-600 uppercase tracking-wider">Кнопка</th>
                   <th className="text-left py-4 px-6 font-medium text-sm text-gray-600 uppercase tracking-wider">Статус</th>
@@ -152,9 +152,6 @@ const BannerManager = () => {
                           <p className="font-medium text-gray-800">{banner.title}</p>
                           <p className="text-sm text-gray-500 truncate max-w-[280px] mt-1">
                             {banner.description || 'Без описания'}
-                          </p>
-                          <p className="text-xs text-gray-400 mt-1">
-                            ID: {banner.id} • Порядок: {banner.order_index}
                           </p>
                         </div>
                       </div>
@@ -235,7 +232,7 @@ const BannerManager = () => {
                   <tr>
                     <td colSpan={5}>
                       <div className="flex justify-center py-8">
-                        <Spinner color="primary" />
+                        <Spinner color="success" />
                       </div>
                     </td>
                   </tr>

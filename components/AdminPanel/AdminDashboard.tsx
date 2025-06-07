@@ -406,7 +406,7 @@ const AdminDashboard = () => {
                           <FaUsers className="text-primary-color" />
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-sm truncate max-w-[180px]">
+                          <span className="text-sm truncate sm:max-w-none max-w-[170px]">
                             {user.email}
                           </span>
                           <span className="text-xs text-gray-500">

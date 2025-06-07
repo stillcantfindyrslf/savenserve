@@ -1,7 +1,7 @@
 'use client';
 
 import React, { ReactNode } from 'react';
-import { MdOutlineInventory2, MdOutlineCategory, MdOutlineDashboard, MdOutlineViewCarousel } from 'react-icons/md';
+import { MdOutlineInventory2, MdOutlineCategory, MdOutlineDashboard, MdOutlineViewCarousel, MdOutlinePeopleAlt } from 'react-icons/md';
 import { usePathname, useRouter } from 'next/navigation';
 import FloatingNavbar from '../FloatingNavbar';
 import { Tab, Tabs } from '@nextui-org/react';
@@ -19,6 +19,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     { key: 'items', path: '/admin/items', icon: <MdOutlineInventory2 size={20} />, label: 'Товары' },
     { key: 'categories', path: '/admin/categories', icon: <MdOutlineCategory size={20} />, label: 'Категории' },
     { key: 'banners', path: '/admin/banner', icon: <MdOutlineViewCarousel size={20} />, label: 'Баннеры' },
+    { key: 'users', path: '/admin/users', icon: <MdOutlinePeopleAlt size={20} />, label: 'Пользователи' },
   ];
 
   const getActiveKey = () => {
@@ -26,6 +27,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     if (pathname === '/admin/items') return 'items';
     if (pathname === '/admin/categories') return 'categories';
     if (pathname === '/admin/banner') return 'banners';
+    if (pathname === '/admin/users') return 'users';
     return 'dashboard';
   };
 
@@ -38,7 +40,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   return (
     <>
-      <FloatingNavbar showSearch={false} searchQuery="" setSearchQuery={() => { }} title="SaveNServe | Админ-панель" showCart={false} subtitle={false} />
+      <FloatingNavbar showSearch={false} searchQuery="" setSearchQuery={() => { }} title="Админ-панель" showCart={false} subtitle={false} />
       <div className="mt-32">
         <div className="mx-auto bg-white rounded-xl shadow-sm py-3 mb-6">
           <Tabs
