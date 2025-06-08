@@ -86,13 +86,17 @@ const useAuthStore = create<AuthState>((set, get) => ({
 		}
 	},
 
-	handleLogout: async () => {
+	handleLogout: async (onLogoutComplete?: () => void) => {
 		try {
 			const { error } = await supabase.auth.signOut();
 			if (error) throw error;
 
 			set({ user: null })
 			toast.info("Выход из аккаунта произошел успешно.");
+
+			if (onLogoutComplete) {
+				onLogoutComplete();
+			}
 		} catch (error) {
 			const err = error as AuthError;
 			console.error('Logout error:', err.message);

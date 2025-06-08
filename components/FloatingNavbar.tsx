@@ -91,6 +91,14 @@ const FloatingNavbar: React.FC<NavbarProps> = ({
 		setIsCategoryDrawerOpen(true);
 	};
 
+	const handleLogoutClick = async () => {
+		await handleLogout(() => {
+			// Этот код выполнится после успешного выхода
+			router.refresh(); // Обновляет текущий маршрут
+			router.push('/'); // Перенаправляет на главную страницу
+		});
+	};
+
 	return (
 		<div className="fixed top-0 left-0 right-0 h-auto bg-background-color z-50">
 			<div className="mt-5 mb-5 px-5 mx-auto z-50 max-w-7xl">
@@ -214,7 +222,7 @@ const FloatingNavbar: React.FC<NavbarProps> = ({
 														Админ-панель
 													</DropdownItem>
 												)}
-												<DropdownItem key="logout" color="danger" onPress={handleLogout}>
+												<DropdownItem key="logout" color="danger" onPress={handleLogoutClick}>
 													Выйти
 												</DropdownItem>
 											</>

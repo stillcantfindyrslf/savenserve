@@ -21,7 +21,6 @@ export async function updateSession(request: NextRequest) {
 		}
 	);
 
-	// Проверка сессии
 	const {
 		data: { session },
 		error,
@@ -31,6 +30,19 @@ export async function updateSession(request: NextRequest) {
 		console.error('Ошибка при получении сессии:', error.message);
 	}
 
-	// Возвращаем объект ответа с корректными cookies
 	return supabaseResponse;
+}
+
+export function createClient(request: NextRequest) {
+	return createServerClient(
+		process.env.NEXT_PUBLIC_SUPABASE_URL!,
+		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+		{
+			cookies: {
+				get(name: string) {
+					return request.cookies.get(name)?.value;
+				},
+			},
+		}
+	);
 }

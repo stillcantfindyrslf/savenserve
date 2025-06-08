@@ -28,7 +28,7 @@ export interface AuthState {
 	setPassword: (password: string) => void;
 	ensureUserProfile: (user: any) => void;
 	handleAuth: (email: string, password: string) => Promise<void>;
-	handleLogout: () => Promise<void>;
+	handleLogout: (onLogoutComplete?: () => void) => Promise<void>;
 	signInWithGoogle: () => Promise<void>;
 	subscribeToAuthChanges: () => void;
 	updateProfile: (name: string, avatar_url: string | null) => Promise<{ success: boolean, error?: string }>;
