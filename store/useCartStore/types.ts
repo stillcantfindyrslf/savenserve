@@ -1,3 +1,9 @@
+export type ItemImage = {
+  id: number;
+  item_id: number;
+  image_url: string;
+};
+
 export type CartItem = {
   id: number;
   item_id: number;
@@ -7,8 +13,9 @@ export type CartItem = {
     name: string;
     description: string;
     price: number;
-    images: string[];
     quantity: number;
+    item_images?: ItemImage[];
+    images?: string[];
   };
 };
 
@@ -21,4 +28,5 @@ export type CartStore = {
   addToCart: (itemId: number, quantity: number) => Promise<void>;
   updateCartItem: (cartItemId: number, newQuantity: number) => Promise<void>;
   removeFromCart: (cartItemId: number) => Promise<void>;
+  removeItemWithoutRestoring: (cartItemId: number) => Promise<void>;
 };

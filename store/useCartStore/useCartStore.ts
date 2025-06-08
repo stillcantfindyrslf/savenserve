@@ -6,8 +6,10 @@ import {
   updateCartItemQuantity as apiUpdateCartItemQuantity,
   removeFromCart as apiRemoveFromCart,
   initializeCart as apiInitializeCart,
+  removeItemWithoutRestoring as apiRemoveItemWithoutRestoring,
 } from '@/api/cart';
 import { CartStore } from './types';
+import { toast } from 'sonner';
 
 const useCartStore = create<CartStore>((set, get) => ({
   cartItems: [],
@@ -46,33 +48,48 @@ const useCartStore = create<CartStore>((set, get) => ({
       }
 
       await apiAddToCart(cartId, itemId, quantity);
+
       await get().fetchCartItems();
     } catch (error) {
-      console.error('Ошибка при добавлении товара в корзину:', error);
+      toast.error(error instanceof Error ? error.message : 'Ошибка при добавлении товара в корзину');
     }
   },
 
-  updateCartItem: async (cartItemId: any, newQuantity: number) => {
+  updateCartItem: async (cartItemId: number, newQuantity: number) => {
     try {
       await apiUpdateCartItemQuantity(cartItemId, newQuantity);
-      set((state) => ({
-        cartItems: state.cartItems.map((item) =>
-          item.id === cartItemId ? { ...item, quantity: newQuantity } : item
-        ),
-      }));
+
+      await get().fetchCartItems();
     } catch (error) {
       console.error('Ошибка при обновлении количества товара в корзине:', error);
+      toast.error(error instanceof Error ? error.message : 'Ошибка при обновлении товара в корзине');
     }
   },
 
   removeFromCart: async (cartItemId) => {
     try {
       await apiRemoveFromCart(cartItemId);
+
       set((state) => ({
         cartItems: state.cartItems.filter((item) => item.id !== cartItemId),
       }));
+
     } catch (error) {
       console.error('Ошибка при удалении товара из корзины:', error);
+      toast.error(error instanceof Error ? error.message : 'Ошибка при удалении товара из корзины');
+    }
+  },
+
+  removeItemWithoutRestoring: async (cartItemId: number) => {
+    try {
+      await apiRemoveItemWithoutRestoring(cartItemId);
+
+      set((state) => ({
+        cartItems: state.cartItems.filter((item) => item.id !== cartItemId),
+      }));
+
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Ошибка при удалении полученного товара');
     }
   },
 }));

@@ -37,24 +37,22 @@ const ItemCard: React.FC<ItemCardProps> = ({
 			return;
 		}
 
-		if (quantityInCart < item.quantity) {
+		if (item.quantity > 0) {
 			addToCart(item.id, 1);
 		} else {
-			toast.warning('Недостаточно товара на складе.');
+			toast.warning('Товар временно отсутствует на складе.');
 		}
 	};
 
 	const handleUpdateQuantity = (newQuantity: number) => {
 		if (!cartItem) return;
 
-		if (newQuantity > 0 && newQuantity <= item.quantity) {
-			updateCartItem(cartItem.id, newQuantity);
-		} else if (newQuantity === 0) {
+		if (newQuantity === 0) {
 			removeFromCart(cartItem.id);
 		} else {
-			toast.warning('Недостаточно товара на складе.');
+			updateCartItem(cartItem.id, newQuantity);
 		}
-	};
+		};
 
 	const handleEdit = () => {
 		if (onEdit) {
