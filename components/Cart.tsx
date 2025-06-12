@@ -14,6 +14,7 @@ const Cart = () => {
     const { user } = useAuthStore();
     const { cartItems, fetchCartItems, updateCartItem, removeFromCart, removeItemWithoutRestoring } = useCartStore();
     const [loading, setLoading] = useState(true);
+    const [loadingItems, setLoadingItems] = useState<Record<number, boolean>>({});
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const [showPickupMode, setShowPickupMode] = useState(false);
     const [orderedItems, setOrderedItems] = useState<number[]>([]);
@@ -31,11 +32,16 @@ const Cart = () => {
         }
     }, [cartItems, orderedItems.length]);
 
-    const handleUpdateQuantity = (cartItemId: number, newQuantity: number) => {
-        if (newQuantity === 0) {
-            removeFromCart(cartItemId);
-        } else {
-            updateCartItem(cartItemId, newQuantity);
+    const handleUpdateQuantity = async (cartItemId: number, newQuantity: number) => {
+        setLoadingItems(prev => ({ ...prev, [cartItemId]: true }));
+        try {
+            if (newQuantity === 0) {
+                await removeFromCart(cartItemId);
+            } else {
+                await updateCartItem(cartItemId, newQuantity);
+            }
+        } finally {
+            setLoadingItems(prev => ({ ...prev, [cartItemId]: false }));
         }
     };
 
@@ -58,6 +64,7 @@ const Cart = () => {
 
         try {
             for (const itemId of selectedItems) {
+                setLoadingItems(prev => ({ ...prev, [itemId]: true }));
                 await removeItemWithoutRestoring(itemId);
             }
 
@@ -68,6 +75,12 @@ const Cart = () => {
         } catch (error) {
             console.error("Ошибка при обработке полученных товаров:", error);
             toast.error("Не удалось обработать полученные товары");
+        } finally {
+            const updatedLoadingItems = { ...loadingItems };
+            selectedItems.forEach(id => {
+                updatedLoadingItems[id] = false;
+            });
+            setLoadingItems(updatedLoadingItems);
         }
     };
 
@@ -89,7 +102,7 @@ const Cart = () => {
 
     return (
         <>
-            <FloatingNavbar searchQuery="" setSearchQuery={() => { }} />
+            <FloatingNavbar searchQuery="" setSearchQuery={() => { }} subtitleCart showCart={false} />
             <div className="container px-4 sm:px-6 mx-auto mt-32 mb-16">
                 <h1 className="text-2xl sm:text-3xl font-bold text-color-text mb-6">Корзина</h1>
 
@@ -157,6 +170,7 @@ const Cart = () => {
                                                     className="sm:ml-1"
                                                     isSelected={selectedItems.includes(id)}
                                                     onValueChange={() => handleItemSelect(id)}
+                                                    isDisabled={loadingItems[id]}
                                                 />
                                             )}
                                             <div className="relative w-full sm:w-28 h-28 flex-shrink-0 bg-light-secondary-color rounded-xl overflow-hidden">
@@ -189,24 +203,34 @@ const Cart = () => {
                                                     {!showPickupMode ? (
                                                         <div className="py-1.5 px-2 bg-secondary-color rounded-full flex items-center justify-between w-full max-w-[200px]">
                                                             <button
-                                                                className="w-9 h-9 flex items-center justify-center text-4xl text-color-text rounded-full border-2 border-color-text active:scale-80 transition-transform duration-150"
+                                                                className="w-9 h-9 flex items-center justify-center text-4xl text-color-text rounded-full border-2 border-color-text active:scale-80 transition-transform duration-150 disabled:opacity-70"
                                                                 onClick={() => handleUpdateQuantity(id, quantity - 1)}
+                                                                disabled={loadingItems[id]}
                                                             >
                                                                 &#8722;
                                                             </button>
-                                                            <div className="min-w-10 w-10 text-center">
-                                                                <span className="font-semibold">{quantity}</span>
+                                                            <div className="min-w-10 w-10 text-center text-color-text">
+                                                                {loadingItems[id] ? (
+                                                                    <Spinner size="sm" color="current" className="mt-2" />
+                                                                ) : (
+                                                                    <span className="font-semibold">{quantity}</span>
+                                                                )}
                                                             </div>
                                                             <button
-                                                                className="w-9 h-9 flex items-center justify-center text-4xl text-color-text rounded-full border-2 border-color-text active:scale-80 transition-transform duration-150"
+                                                                className="w-9 h-9 flex items-center justify-center text-4xl text-color-text rounded-full border-2 border-color-text active:scale-80 transition-transform duration-150 disabled:opacity-70"
                                                                 onClick={() => handleUpdateQuantity(id, quantity + 1)}
+                                                                disabled={loadingItems[id]}
                                                             >
                                                                 +
                                                             </button>
                                                         </div>
                                                     ) : (
                                                         <span className="text-sm font-medium bg-green-50 text-green-700 px-3 py-1.5 rounded-full">
-                                                            {quantity} шт.
+                                                            {loadingItems[id] ? (
+                                                                <Spinner size="sm" color="success" />
+                                                            ) : (
+                                                                `${quantity} шт.`
+                                                            )}
                                                         </span>
                                                     )}
                                                     <p className="font-medium text-color-text sm:hidden ml-auto">
@@ -275,6 +299,7 @@ const Cart = () => {
                                         className="w-full bg-light-secondary-color text-primary-color"
                                         radius="full"
                                         onClick={togglePickupMode}
+                                        isDisabled={Object.values(loadingItems).some(Boolean)}
                                     >
                                         Отмена
                                     </Button>

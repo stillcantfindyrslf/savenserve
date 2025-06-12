@@ -1,5 +1,5 @@
-import React from 'react';
-import { useDisclosure, Image } from '@nextui-org/react';
+import React, { useState } from 'react';
+import { useDisclosure, Image, Spinner } from '@nextui-org/react';
 import { Item, ItemWithImages } from '@/store/useItemStore/types';
 import useAuthStore from '@/store/useAuthStore';
 import useCartStore from '@/store/useCartStore';
@@ -24,6 +24,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
 	const { user } = useAuthStore();
 	const { cartItems, addToCart, updateCartItem, removeFromCart } = useCartStore();
 	const { isOpen, onOpen, onClose } = useDisclosure();
+	const [isLoading, setIsLoading] = useState(false);
 
 	const cartItem = cartItems.find((cartItem) => cartItem.item.id === item.id);
 	const quantityInCart = cartItem ? cartItem.quantity : 0;
@@ -31,28 +32,38 @@ const ItemCard: React.FC<ItemCardProps> = ({
 		? item.item_images[0].image_url
 		: '/placeholder-image.jpg';
 
-	const handleAddToCart = () => {
+	const handleAddToCart = async () => {
 		if (!user) {
 			toast.warning('Войдите, чтобы добавить товар в корзину.');
 			return;
 		}
 
 		if (item.quantity > 0) {
-			addToCart(item.id, 1);
+			setIsLoading(true);
+			try {
+				await addToCart(item.id, 1);
+			} finally {
+				setIsLoading(false);
+			}
 		} else {
 			toast.warning('Товар временно отсутствует на складе.');
 		}
 	};
 
-	const handleUpdateQuantity = (newQuantity: number) => {
+	const handleUpdateQuantity = async (newQuantity: number) => {
 		if (!cartItem) return;
 
-		if (newQuantity === 0) {
-			removeFromCart(cartItem.id);
-		} else {
-			updateCartItem(cartItem.id, newQuantity);
+		setIsLoading(true);
+		try {
+			if (newQuantity === 0) {
+				await removeFromCart(cartItem.id);
+			} else {
+				await updateCartItem(cartItem.id, newQuantity);
+			}
+		} finally {
+			setIsLoading(false);
 		}
-		};
+	};
 
 	const handleEdit = () => {
 		if (onEdit) {
@@ -136,35 +147,51 @@ const ItemCard: React.FC<ItemCardProps> = ({
 						<>
 							{quantityInCart === 0 ? (
 								<button
-									className="w-full py-3 bg-light-secondary-color text-color-text font-semibold rounded-md hover:bg-secondary-color transition-all"
+									className="w-full py-3 bg-light-secondary-color text-color-text font-semibold rounded-md hover:bg-secondary-color transition-all disabled:opacity-70"
 									onClick={(e) => {
 										e.stopPropagation();
 										handleAddToCart();
 									}}
+									disabled={isLoading}
 								>
-									<span className="hidden sm:inline">Добавить в корзину</span>
-									<span className="inline sm:hidden">В корзину</span>
+									{isLoading ? (
+										<div className="flex items-center justify-center">
+											<Spinner size="sm" color="current" className="mr-2" />
+											<span>Добавление...</span>
+										</div>
+									) : (
+										<>
+											<span className="hidden sm:inline">Добавить в корзину</span>
+											<span className="inline sm:hidden">В корзину</span>
+										</>
+									)}
 								</button>
 							) : (
 								<div className="mx-auto py-1.5 px-2 bg-secondary-color rounded-full flex items-center justify-between text-3xl text-color-text w-full">
 									<button
-										className="w-9 h-9 flex items-center justify-center text-4xl text-color-text rounded-full border-2 border-color-text active:scale-80 transition-transform duration-150"
+										className="w-9 h-9 flex items-center justify-center text-4xl text-color-text rounded-full border-2 border-color-text active:scale-80 transition-transform duration-150 disabled:opacity-70"
 										onClick={(e) => {
 											e.stopPropagation();
 											handleUpdateQuantity(quantityInCart - 1);
 										}}
+										disabled={isLoading}
 									>
 										&#8722;
 									</button>
-									<div className="min-w-10 w-10 text-center">
-										<span className="font-semibold">{quantityInCart}</span>
+									<div className="min-w-10 w-10 text-center flex items-center justify-center h-9">
+										{isLoading ? (
+											<Spinner size="md" color="current" />
+										) : (
+											<span className="font-semibold">{quantityInCart}</span>
+										)}
 									</div>
 									<button
-										className="w-9 h-9 flex items-center justify-center text-4xl text-color-text rounded-full border-2 border-color-text active:scale-80 transition-transform duration-150"
+										className="w-9 h-9 flex items-center justify-center text-4xl text-color-text rounded-full border-2 border-color-text active:scale-80 transition-transform duration-150 disabled:opacity-70"
 										onClick={(e) => {
 											e.stopPropagation();
 											handleUpdateQuantity(quantityInCart + 1);
 										}}
+										disabled={isLoading}
 									>
 										+
 									</button>

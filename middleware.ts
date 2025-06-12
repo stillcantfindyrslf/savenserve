@@ -10,9 +10,10 @@ export async function middleware(request: NextRequest) {
 	const isFavoritesPath = request.nextUrl.pathname.startsWith('/category/favorites');
 	const isProfilePath = request.nextUrl.pathname.startsWith('/profile');
 	const isCartPath = request.nextUrl.pathname.startsWith('/cart');
+	const isResetPassword = request.nextUrl.pathname.startsWith('/reset-password');
 
 
-	if (!isAdminPath && !isFavoritesPath && !isProfilePath && !isCartPath) {
+	if (!isAdminPath && !isFavoritesPath && !isProfilePath && !isCartPath && !isResetPassword) {
 		return response;
 	}
 
@@ -25,7 +26,7 @@ export async function middleware(request: NextRequest) {
 		return NextResponse.redirect(redirectUrl);
 	}
 
-	if (isFavoritesPath || isProfilePath || isCartPath) {
+	if (isFavoritesPath || isProfilePath || isCartPath || isResetPassword) {
 		return response;
 	}
 
@@ -56,5 +57,6 @@ export const config = {
 		'/category/favorites/:path*',
 		'/profile',
 		'/cart',
+		'/reset-password',
 	],
 }

@@ -93,9 +93,8 @@ const FloatingNavbar: React.FC<NavbarProps> = ({
 
 	const handleLogoutClick = async () => {
 		await handleLogout(() => {
-			// Этот код выполнится после успешного выхода
-			router.refresh(); // Обновляет текущий маршрут
-			router.push('/'); // Перенаправляет на главную страницу
+			router.refresh();
+			router.push('/');
 		});
 	};
 
