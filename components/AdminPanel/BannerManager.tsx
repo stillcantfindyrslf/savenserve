@@ -5,11 +5,11 @@ import { Button, Card, Spinner, Tooltip, Image } from '@nextui-org/react';
 import useBannerStore from '@/store/useBannerStore';
 import BannerModal from './Modals/BannerModal';
 import { toast } from 'sonner';
-import { FiPlus, FiEye, FiEyeOff, FiEdit2, FiTrash2 } from 'react-icons/fi';
+import { FiPlus, FiEye, FiEyeOff, FiTrash2 } from 'react-icons/fi';
 import { BsArrowUpCircle } from 'react-icons/bs';
-import { RiDashboard3Line } from 'react-icons/ri';
 import { Banner } from '@/store/useBannerStore/types';
 import { ErrorType, getErrorMessage } from '@/store/ApiError';
+import { AiOutlineEdit } from 'react-icons/ai';
 
 const BannerManager = () => {
   const {
@@ -82,8 +82,7 @@ const BannerManager = () => {
     <>
       <div className="flex flex-col">
         <div className="flex justify-between items-center mb-6 px-1">
-          <div className="flex items-center gap-2">
-            <RiDashboard3Line className="text-primary-color text-2xl" />
+          <div className="flex items-center">
             <h1 className="text-2xl font-bold text-color-text">Управление баннерами</h1>
           </div>
           <Button
@@ -207,12 +206,14 @@ const BannerManager = () => {
                         </Tooltip>
 
                         <Tooltip content="Редактировать">
-                          <button
-                            onClick={() => handleEditBanner(banner)}
-                            className="p-2 text-blue-500 hover:text-blue-700 rounded-full hover:bg-blue-50 transition-colors"
+                          <Button
+                            isIconOnly
+                            variant="light"
+                            onPress={() => handleEditBanner(banner)}
+                            className="text-primary-color"
                           >
-                            <FiEdit2 size={18} />
-                          </button>
+                            <AiOutlineEdit size={20} />
+                          </Button>
                         </Tooltip>
 
                         <Tooltip content="Удалить" color="danger">

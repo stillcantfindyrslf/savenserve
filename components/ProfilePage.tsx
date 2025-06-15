@@ -133,11 +133,8 @@ const ProfilePage = () => {
     return (
       <>
         <FloatingNavbar showSearch={false} searchQuery="" setSearchQuery={() => { }} />
-        <div className="mx-auto mt-32 p-4 flex justify-center">
-          <Card className="p-12 bg-white rounded-2xl flex flex-col items-center">
-            <Spinner size="lg" color="success" className="text-primary-color" />
-            <p className="mt-4 text-gray-600">Загрузка данных...</p>
-          </Card>
+        <div className="flex justify-center items-center h-[70vh]">
+          <Spinner size="lg" color="success" />
         </div>
       </>
     );
@@ -145,16 +142,8 @@ const ProfilePage = () => {
 
   return (
     <>
-      <FloatingNavbar showSearch={false} searchQuery="" setSearchQuery={() => { }} />
+      <FloatingNavbar showSearch={false} showCart={false} searchQuery="" setSearchQuery={() => { }} />
       <div className="mx-auto mt-32">
-        {!user ? (
-          <div className="flex justify-center">
-            <Card className="p-12 bg-white rounded-2xl flex flex-col items-center">
-              <Spinner size="lg" color="success" className="text-primary-color" />
-              <p className="mt-4 text-gray-600">Проверка авторизации...</p>
-            </Card>
-          </div>
-        ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-1">
               <Card className="p-6 bg-white shadow-sm rounded-2xl">
@@ -196,7 +185,7 @@ const ProfilePage = () => {
                     <div className="flex items-center justify-between">
                       <p className="text-sm text-gray-600">Email:</p>
                       <p className="font-medium text-sm">
-                        {user.email}
+                        {user?.email}
                       </p>
                     </div>
                     <div className="flex items-center justify-between">
@@ -377,7 +366,6 @@ const ProfilePage = () => {
               </Card>
             </div>
           </div>
-        )}
       </div>
     </>
   );

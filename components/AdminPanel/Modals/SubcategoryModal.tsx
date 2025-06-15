@@ -167,7 +167,7 @@ const SubcategoryModal = () => {
           </Button>
 
           <Button
-            className="bg-primary-color text-white hover:bg-primary-color/90"
+            className="bg-secondary-color text-color-text font-medium text-base hover:bg-secondary-color/90"
             onPress={handleSubmit}
             isLoading={isLoading}
           >

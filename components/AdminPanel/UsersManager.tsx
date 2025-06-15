@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button, Card, Input, Spinner, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Tooltip, Chip, Pagination } from '@nextui-org/react';
-import { FiSearch, FiEdit2, FiTrash2, FiFilter } from 'react-icons/fi';
+import { FiSearch, FiTrash2, FiFilter } from 'react-icons/fi';
 import { MdPerson, MdOutlineSort } from 'react-icons/md';
 import { IoMdRefresh } from 'react-icons/io';
 import { BiUserCheck } from 'react-icons/bi';
@@ -12,6 +12,7 @@ import EditUserModal from './Modals/EditUserModal';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { UserProfile } from '@/store/useAuthStore/types';
+import { AiOutlineEdit } from 'react-icons/ai';
 
 const UserManager: React.FC = () => {
   const {
@@ -122,8 +123,7 @@ const UserManager: React.FC = () => {
     <>
       <div className="flex flex-col">
         <div className="flex justify-between items-center mb-6 px-1">
-          <div className="flex items-center gap-2">
-            <MdPerson className="text-primary-color text-2xl" />
+          <div className="flex items-center">
             <h1 className="text-2xl font-bold text-color-text">Управление пользователями</h1>
           </div>
         </div>
@@ -275,26 +275,24 @@ const UserManager: React.FC = () => {
                       </TableCell>
                       <TableCell>
                         <div className="flex justify-center gap-3">
-                          <Tooltip content="Редактировать роль" placement="left">
+                          <Tooltip content="Редактировать роль">
                             <Button
                               isIconOnly
-                              size="sm"
                               variant="light"
-                              className="text-blue-500 bg-blue-50 hover:bg-blue-100"
                               onPress={() => handleEditUser(user)}
+                              className="text-primary-color"
                             >
-                              <FiEdit2 size={16} />
+                              <AiOutlineEdit size={20} />
                             </Button>
                           </Tooltip>
-                          <Tooltip content="Удалить" color="danger" placement="left">
+                          <Tooltip content="Удалить" color="danger">
                             <Button
                               isIconOnly
-                              size="sm"
                               variant="light"
-                              className="text-danger bg-red-50 hover:bg-red-100"
+                              className="text-danger hover:bg-red-100"
                               onPress={() => handleDeleteUser(user.id)}
                             >
-                              <FiTrash2 size={16} />
+                              <FiTrash2 size={20} />
                             </Button>
                           </Tooltip>
                         </div>

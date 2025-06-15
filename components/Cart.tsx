@@ -102,7 +102,7 @@ const Cart = () => {
 
     return (
         <>
-            <FloatingNavbar searchQuery="" setSearchQuery={() => { }} subtitleCart showCart={false} />
+            <FloatingNavbar showSearch={false} searchQuery="" setSearchQuery={() => { }} subtitle={false} subtitleCart showCart={false} />
             <div className="container px-4 sm:px-6 mx-auto mt-32 mb-16">
                 <h1 className="text-2xl sm:text-3xl font-bold text-color-text mb-6">Корзина</h1>
 

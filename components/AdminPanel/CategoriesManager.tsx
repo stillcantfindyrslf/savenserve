@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Accordion, AccordionItem, Divider, Spinner, Input } from '@nextui-org/react';
+import { Button, Card, Accordion, AccordionItem, Divider, Spinner, Input, Tooltip } from '@nextui-org/react';
 import useCategoriesStore from '@/store/useCategoriesStore';
 import CategoryModal from './Modals/CategoryModal';
 import SubcategoryModal from './Modals/SubcategoryModal';
@@ -141,7 +141,7 @@ const CategoriesManager = () => {
             />
 
             <Button
-              className="bg-primary-color text-white"
+              className="bg-light-secondary-color text-primary-color border border-primary-color/20"
               onPress={handleAddCategory}
               startContent={<FiPlus />}
             >
@@ -193,28 +193,32 @@ const CategoriesManager = () => {
                         <h3 className="text-xl font-semibold">{category.name}</h3>
                       </div>
                       <div className="flex gap-2 items-center">
-                        <Button
-                          isIconOnly
-                          variant="light"
-                          onClick={(e: React.MouseEvent) => {
-                            e.stopPropagation();
-                            handleEditCategory(category);
-                          }}
-                          className="text-primary-color"
-                        >
-                          <AiOutlineEdit size={20} />
-                        </Button>
-                        <Button
-                          isIconOnly
-                          variant="light"
-                          onClick={(e: React.MouseEvent) => {
-                            e.stopPropagation();
-                            handleDeleteCategory(category);
-                          }}
-                          className="text-danger"
-                        >
-                          <AiOutlineDelete size={20} />
-                        </Button>
+                        <Tooltip content="Редактировать">
+                          <Button
+                            isIconOnly
+                            variant="light"
+                            onClick={(e: React.MouseEvent) => {
+                              e.stopPropagation();
+                              handleEditCategory(category);
+                            }}
+                            className="text-primary-color"
+                          >
+                            <AiOutlineEdit size={20} />
+                          </Button>
+                        </Tooltip>
+                        <Tooltip content="Удалить" color="danger">
+                          <Button
+                            isIconOnly
+                            variant="light"
+                            onClick={(e: React.MouseEvent) => {
+                              e.stopPropagation();
+                              handleDeleteCategory(category);
+                            }}
+                            className="text-danger"
+                          >
+                            <AiOutlineDelete size={20} />
+                          </Button>
+                        </Tooltip>
                         <div className={`text-gray-400 transition-transform ${isExpanded(category.id.toString()) ? "rotate-180" : ""} ml-2`}>
                           <MdKeyboardArrowDown size={24} />
                         </div>

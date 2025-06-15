@@ -261,6 +261,9 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 
 	const handleCloseModal = () => {
 		fetchItems();
+		setImageFiles([]);
+		setImagePreviews([]);
+		setItemImages([]);
 		closeModal();
 	};
 
@@ -324,11 +327,6 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 									required
 									isInvalid={!currentItem?.name}
 									errorMessage={!currentItem?.name ? "Название обязательно" : ""}
-									classNames={{
-										label: "text-color-text font-medium",
-										input: "border-gray-200 focus:border-primary-color",
-										inputWrapper: "bg-white"
-									}}
 								/>
 
 								<Textarea
@@ -341,11 +339,6 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 											description: e.target.value
 										})
 									}
-									classNames={{
-										label: "text-color-text font-medium",
-										input: "border-gray-200 focus:border-primary-color",
-										inputWrapper: "bg-white"
-									}}
 								/>
 
 								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -363,11 +356,6 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 										required
 										isInvalid={!currentItem?.price || currentItem.price <= 0}
 										errorMessage={!currentItem?.price || currentItem.price <= 0 ? "Цена должна быть больше нуля" : ""}
-										classNames={{
-											label: "text-color-text font-medium",
-											input: "border-gray-200 focus:border-primary-color",
-											inputWrapper: "bg-white"
-										}}
 									/>
 
 									<Input
@@ -381,11 +369,6 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 												normal_price: parseFloat(e.target.value) || null,
 											})
 										}
-										classNames={{
-											label: "text-color-text font-medium",
-											input: "border-gray-200 focus:border-primary-color",
-											inputWrapper: "bg-white"
-										}}
 									/>
 								</div>
 
@@ -401,11 +384,6 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 												quantity: parseInt(e.target.value, 10) || 0,
 											})
 										}
-										classNames={{
-											label: "text-color-text font-medium",
-											input: "border-gray-200 focus:border-primary-color",
-											inputWrapper: "bg-white"
-										}}
 									/>
 
 									<Input
@@ -418,11 +396,6 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 												best_before: e.target.value
 											})
 										}
-										classNames={{
-											label: "text-color-text font-medium",
-											input: "border-gray-200 focus:border-primary-color",
-											inputWrapper: "bg-white"
-										}}
 									/>
 								</div>
 
@@ -441,11 +414,6 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 										}}
 										isInvalid={!currentItem?.category_id}
 										errorMessage={!currentItem?.category_id ? "Выберите категорию" : ""}
-										classNames={{
-											label: "text-color-text font-medium",
-											trigger: "border-gray-200 bg-white",
-											listbox: "bg-white border border-gray-200"
-										}}
 									>
 										{categories.map((category) => (
 											<SelectItem key={category.id.toString()} textValue={category.name}>
@@ -465,11 +433,6 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 													...currentItem,
 													subcategory_id: parseInt(selectedKey as string, 10),
 												});
-											}}
-											classNames={{
-												label: "text-color-text font-medium",
-												trigger: "border-gray-200 bg-white",
-												listbox: "bg-white border border-gray-200"
 											}}
 										>
 											{categories
@@ -493,11 +456,6 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 											address: e.target.value
 										})
 									}
-									classNames={{
-										label: "text-color-text font-medium",
-										input: "border-gray-200 focus:border-primary-color",
-										inputWrapper: "bg-white"
-									}}
 								/>
 
 								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -511,11 +469,6 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 												brand: e.target.value
 											})
 										}
-										classNames={{
-											label: "text-color-text font-medium",
-											input: "border-gray-200 focus:border-primary-color",
-											inputWrapper: "bg-white"
-										}}
 									/>
 
 									<Input
@@ -528,11 +481,6 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 												country_of_origin: e.target.value,
 											})
 										}
-										classNames={{
-											label: "text-color-text font-medium",
-											input: "border-gray-200 focus:border-primary-color",
-											inputWrapper: "bg-white"
-										}}
 									/>
 								</div>
 
@@ -547,11 +495,6 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 												weight: e.target.value
 											})
 										}
-										classNames={{
-											label: "text-color-text font-medium",
-											input: "border-gray-200 focus:border-primary-color",
-											inputWrapper: "bg-white"
-										}}
 									/>
 
 									<Input
@@ -565,11 +508,6 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 												price_per_kg: parseFloat(e.target.value) || null,
 											})
 										}
-										classNames={{
-											label: "text-color-text font-medium",
-											input: "border-gray-200 focus:border-primary-color",
-											inputWrapper: "bg-white"
-										}}
 									/>
 								</div>
 
@@ -583,17 +521,12 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 											information: e.target.value
 										})
 									}
-									classNames={{
-										label: "text-color-text font-medium",
-										input: "border-gray-200 focus:border-primary-color",
-										inputWrapper: "bg-white"
-									}}
 								/>
 
-								<Card className="p-4 mt-4 bg-light-secondary-color border border-gray-200 shadow-sm">
+								<Card shadow="none" className="p-4 mt-4 bg-light-secondary-color border border-gray-200">
 									<h3 className="text-lg font-medium text-color-text mb-3">Настройки скидок</h3>
 
-									<div className="space-y-3">
+									<div className="flex flex-col gap-4">
 										<Checkbox
 											isSelected={noDiscount}
 											onChange={(checked) => {
@@ -603,7 +536,7 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 													setCustomDiscounts({ "5": 0, "2": 0, "1": 0 });
 												}
 											}}
-											color="default"
+											color="success"
 											classNames={{
 												label: "text-color-text"
 											}}
@@ -620,7 +553,7 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 													setCustomDiscounts({ "5": 0, "2": 0, "1": 0 });
 												}
 											}}
-											color="primary"
+											color="success"
 											classNames={{
 												label: "text-color-text"
 											}}
@@ -637,7 +570,7 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 													setCustomDiscounts({ "5": 0, "2": 0, "1": 0 });
 												}
 											}}
-											color="warning"
+											color="success"
 											classNames={{
 												label: "text-color-text"
 											}}
@@ -719,10 +652,9 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 
 								<div className="flex justify-end mt-6">
 									<Button
-										className="bg-primary-color text-white hover:bg-primary-color/90"
+										className="bg-secondary-color text-color-text font-medium text-base hover:bg-secondary-color/90"
 										onPress={handleSaveItem}
 										isLoading={isLoading}
-										size="lg"
 									>
 										{currentItem?.id ? 'Обновить товар' : 'Сохранить товар'}
 									</Button>
@@ -737,7 +669,7 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 							<div className="flex items-center gap-2 px-1 py-2">
 								<span>Изображения</span>
 								{itemImages.length > 0 &&
-									<span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary-color text-white text-xs">
+									<span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-secondary-color text-text-color text-xs">
 										{itemImages.length}
 									</span>
 								}
@@ -843,16 +775,15 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 											)}
 
 											{itemImages.length + imageFiles.length < 5 && (
-												<Card
-													isPressable
-													className="h-48 flex items-center justify-center border-2 border-dashed border-secondary-color bg-light-secondary-color hover:bg-secondary-color/30 cursor-pointer transition-colors duration-300"
-													onPress={() => document.getElementById('photo-input')?.click()}
+												<div
+													className="w-full h-48 aspect-video border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 cursor-pointer transition-colors"
+													onClick={() => document.getElementById('photo-input')?.click()}
 												>
 													<div className="flex flex-col items-center gap-2">
 														<AiOutlinePlus className="text-primary-color text-4xl" />
 														<p className="text-primary-color font-medium">Добавить изображение</p>
 													</div>
-												</Card>
+												</div>
 											)}
 
 											<input
@@ -867,7 +798,7 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 											{imageFiles.length > 0 && (
 												<div className="flex justify-center mt-6">
 													<Button
-														className="bg-primary-color text-white hover:bg-primary-color/90"
+														className="bg-secondary-color text-color-text font-medium text-base hover:bg-secondary-color/90"
 														onPress={handleUploadImages}
 														isLoading={isLoading}
 														size="lg"
@@ -903,10 +834,9 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 
 					{activeTab === "details" && (
 						<Button
-							className="bg-primary-color text-white hover:bg-primary-color/90"
+							className="bg-secondary-color text-color-text font-medium text-base hover:bg-secondary-color/90"
 							onPress={handleSaveItem}
 							isLoading={isLoading}
-							size="lg"
 						>
 							{currentItem?.id ? 'Сохранить и перейти к изображениям' : 'Создать товар'}
 						</Button>

@@ -268,7 +268,7 @@ const BannerModal = () => {
           </Button>
 
           <Button
-            className="bg-primary-color text-white font-medium"
+            className="bg-secondary-color text-color-text font-medium text-base hover:bg-secondary-color/90"
             onPress={handleSubmit}
             isLoading={isLoading}
           >

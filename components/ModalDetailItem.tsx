@@ -199,114 +199,112 @@ const ItemDetailModal: React.FC<ItemModalProps> = ({ isOpen, onOpenChange, item,
                             </div>
                         </div>
 
-                        <div className="w-full md:w-[50%] p-3 sm:p-4 md:p-5 flex flex-col overflow-y-auto" style={{ maxHeight: "calc(90vh - 56px)" }}>
-
-                            <div className="flex flex-col">
-                                <div className="flex items-center justify-between mb-4 sm:mb-5">
-                                    <div>
-                                        {item.discount_price && item.discount_price < item.price ? (
-                                            <div className="flex flex-col">
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-3xl sm:text-4xl font-bold text-red-600">{item.discount_price} р.</span>
-                                                    <Chip color="warning" variant="flat" size="lg" className="text-xs sm:text-sm">{Math.round(100 - (item.discount_price / item.price) * 100)}%</Chip>
-                                                </div>
-                                                <span className="text-lg sm:text-xl text-gray-500 line-through mt-1">{item.price} р.</span>
+                        <div className="w-full md:w-[50%] p-3 sm:p-4 md:p-5 flex flex-col overflow-y-auto" style={{ maxHeight: "calc(90vh - 56px)" }}>                <div className="flex flex-col">
+                            <div className="flex items-center justify-between mb-4 sm:mb-5">
+                                <div>
+                                    {item.discount_price && item.discount_price < item.price ? (
+                                        <div className="flex flex-col">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-3xl sm:text-4xl font-bold text-red-600">{item.discount_price} р.</span>
+                                                <Chip color="warning" variant="flat" size="lg" className="text-xs sm:text-sm">{Math.round(100 - (item.discount_price / item.price) * 100)}%</Chip>
                                             </div>
-                                        ) : (
-                                            <span className="text-3xl sm:text-4xl font-bold text-color-text">{item.price} р.</span>
-                                        )}
-                                    </div>
-
-                                    {item.best_before && (
-                                        <Chip
-                                            color={getFreshStatusColor()}
-                                            variant="flat"
-                                            size="md"
-                                            startContent={<MdCalendarToday size={16} className="sm:w-[18px] sm:h-[18px]" />}
-                                            className="px-2 sm:px-3 py-1.5 sm:py-2"
-                                        >
-                                            <span className="font-medium text-xs sm:text-sm">{getFreshStatusText()}</span>
-                                        </Chip>
+                                            <span className="text-lg sm:text-xl text-gray-500 line-through mt-1">{item.price} р.</span>
+                                        </div>
+                                    ) : (
+                                        <span className="text-3xl sm:text-4xl font-bold text-color-text">{item.price} р.</span>
                                     )}
                                 </div>
 
-                                {item.description && (
-                                    <div className="mb-4 sm:mb-5 bg-light-secondary-color/30 rounded-lg">
-                                        <h4 className="font-semibold text-base sm:text-lg text-color-text mb-1.5 sm:mb-2 flex items-center">
-                                            <MdOutlineInfo className="mr-1.5 sm:mr-2" size={18} />
-                                            Описание
-                                        </h4>
-                                        <p className="text-gray-700 leading-relaxed text-sm sm:text-base">{item.description}</p>
-                                    </div>
+                                {item.best_before && (
+                                    <Chip
+                                        color={getFreshStatusColor()}
+                                        variant="flat"
+                                        size="md"
+                                        startContent={<MdCalendarToday size={16} className="sm:w-[18px] sm:h-[18px]" />}
+                                        className="px-2 sm:px-3 py-1.5 sm:py-2"
+                                    >
+                                        <span className="font-medium text-xs sm:text-sm">{getFreshStatusText()}</span>
+                                    </Chip>
                                 )}
+                            </div>
 
-                                <div className="space-y-2 sm:space-y-3 mb-5 sm:mb-6">
-                                    <h4 className="font-semibold text-base sm:text-lg text-color-text flex items-center">
-                                        Информация о товаре
+                            {item.description && (
+                                <div className="mb-4 sm:mb-5 bg-light-secondary-color/30 rounded-lg">
+                                    <h4 className="font-semibold text-base sm:text-lg text-color-text mb-1.5 sm:mb-2 flex items-center">
+                                        <MdOutlineInfo className="mr-1.5 sm:mr-2" size={18} />
+                                        Описание
                                     </h4>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-3 sm:gap-y-4">
-                                        {item.brand && (
-                                            <div className="flex items-center gap-2 sm:gap-3">
-                                                <SiTarget className="text-primary-color flex-shrink-0" size={20} />
-                                                <div>
-                                                    <p className="text-xs sm:text-sm text-gray-500 font-medium">Бренд</p>
-                                                    <p className="text-sm sm:text-base text-gray-800 font-medium">{item.brand}</p>
-                                                </div>
-                                            </div>
-                                        )}
+                                    <p className="text-gray-700 leading-relaxed text-sm sm:text-base">{item.description}</p>
+                                </div>
+                            )}
 
-                                        {item.weight && (
-                                            <div className="flex items-center gap-2 sm:gap-3">
-                                                <TbWeight className="text-primary-color flex-shrink-0" size={20} />
-                                                <div>
-                                                    <p className="text-xs sm:text-sm text-gray-500 font-medium">Вес</p>
-                                                    <p className="text-sm sm:text-base text-gray-800 font-medium">{item.weight}</p>
-                                                </div>
+                            <div className="space-y-2 sm:space-y-3 mb-5 sm:mb-6">
+                                <h4 className="font-semibold text-base sm:text-lg text-color-text flex items-center">
+                                    Информация о товаре
+                                </h4>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-3 sm:gap-y-4">
+                                    {item.brand && (
+                                        <div className="flex items-center gap-2 sm:gap-3">
+                                            <SiTarget className="text-primary-color flex-shrink-0" size={20} />
+                                            <div>
+                                                <p className="text-xs sm:text-sm text-gray-500 font-medium">Бренд</p>
+                                                <p className="text-sm sm:text-base text-gray-800 font-medium">{item.brand}</p>
                                             </div>
-                                        )}
+                                        </div>
+                                    )}
 
-                                        {item.address && (
-                                            <div className="flex items-center gap-2 sm:gap-3">
-                                                <MdLocationOn className="text-primary-color flex-shrink-0" size={20} />
-                                                <div>
-                                                    <p className="text-xs sm:text-sm text-gray-500 font-medium">Адрес</p>
-                                                    <p className="text-sm sm:text-base text-gray-800 font-medium">{item.address}</p>
-                                                </div>
+                                    {item.weight && (
+                                        <div className="flex items-center gap-2 sm:gap-3">
+                                            <TbWeight className="text-primary-color flex-shrink-0" size={20} />
+                                            <div>
+                                                <p className="text-xs sm:text-sm text-gray-500 font-medium">Вес</p>
+                                                <p className="text-sm sm:text-base text-gray-800 font-medium">{item.weight}</p>
                                             </div>
-                                        )}
+                                        </div>
+                                    )}
 
-                                        {item.country_of_origin && (
-                                            <div className="flex items-center gap-2 sm:gap-3">
-                                                <BsGlobe className="text-primary-color flex-shrink-0" size={20} />
-                                                <div>
-                                                    <p className="text-xs sm:text-sm text-gray-500 font-medium">Страна</p>
-                                                    <p className="text-sm sm:text-base text-gray-800 font-medium">{item.country_of_origin}</p>
-                                                </div>
+                                    {item.address && (
+                                        <div className="flex items-center gap-2 sm:gap-3">
+                                            <MdLocationOn className="text-primary-color flex-shrink-0" size={20} />
+                                            <div>
+                                                <p className="text-xs sm:text-sm text-gray-500 font-medium">Адрес</p>
+                                                <p className="text-sm sm:text-base text-gray-800 font-medium">{item.address}</p>
                                             </div>
-                                        )}
+                                        </div>
+                                    )}
 
-                                        {item.price_per_kg && (
-                                            <div className="flex items-center gap-2 sm:gap-3">
-                                                <FaMoneyBillWave className="text-primary-color flex-shrink-0" size={20} />
-                                                <div>
-                                                    <p className="text-xs sm:text-sm text-gray-500 font-medium">Цена за кг</p>
-                                                    <p className="text-sm sm:text-base text-gray-800 font-medium">{item.price_per_kg} р./кг</p>
-                                                </div>
+                                    {item.country_of_origin && (
+                                        <div className="flex items-center gap-2 sm:gap-3">
+                                            <BsGlobe className="text-primary-color flex-shrink-0" size={20} />
+                                            <div>
+                                                <p className="text-xs sm:text-sm text-gray-500 font-medium">Страна</p>
+                                                <p className="text-sm sm:text-base text-gray-800 font-medium">{item.country_of_origin}</p>
                                             </div>
-                                        )}
+                                        </div>
+                                    )}
 
-                                        {item.information && (
-                                            <div className="flex items-center gap-2 sm:gap-3">
-                                                <MdOutlineInfo className="text-primary-color flex-shrink-0" size={20} />
-                                                <div>
-                                                    <p className="text-xs sm:text-sm text-gray-500 font-medium">Дополнительно</p>
-                                                    <p className="text-sm sm:text-base text-gray-800 font-medium">{item.information}</p>
-                                                </div>
+                                    {item.price_per_kg && (
+                                        <div className="flex items-center gap-2 sm:gap-3">
+                                            <FaMoneyBillWave className="text-primary-color flex-shrink-0" size={20} />
+                                            <div>
+                                                <p className="text-xs sm:text-sm text-gray-500 font-medium">Цена за кг</p>
+                                                <p className="text-sm sm:text-base text-gray-800 font-medium">{item.price_per_kg} р./кг</p>
                                             </div>
-                                        )}
-                                    </div>
+                                        </div>
+                                    )}
+
+                                    {item.information && (
+                                        <div className="flex items-center gap-2 sm:gap-3">
+                                            <MdOutlineInfo className="text-primary-color flex-shrink-0" size={20} />
+                                            <div>
+                                                <p className="text-xs sm:text-sm text-gray-500 font-medium">Дополнительно</p>
+                                                <p className="text-sm sm:text-base text-gray-800 font-medium">{item.information}</p>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
+                        </div>
 
                             <div className="mt-auto pt-3 sm:pt-4">
                                 <Button

@@ -40,7 +40,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   return (
     <>
-      <FloatingNavbar showSearch={false} searchQuery="" setSearchQuery={() => { }} title="Админ-панель" showCart={false} subtitle={false} />
+      <FloatingNavbar showSearch={false} searchQuery="" setSearchQuery={() => { }} title="Админ-панель" showCart={false} />
       <div className="mt-32">
         <div className="mx-auto bg-white rounded-xl shadow-sm py-3 mb-6">
           <Tabs

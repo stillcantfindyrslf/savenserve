@@ -1,8 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Divider } from '@nextui-org/react';
-import { MdOutlineMail, MdOutlineLocalPhone } from 'react-icons/md';
-import { RiMapPin2Line } from 'react-icons/ri';
+import { MdOutlineMail } from 'react-icons/md';
 import { PiPlantFill } from 'react-icons/pi';
 import { IoCheckmarkSharp } from 'react-icons/io5';
 
@@ -64,7 +63,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/favorites" className="text-gray-300 hover:text-lime-300 transition-colors text-sm sm:text-base">
+                <Link href="/category/favorites?view=favorites" className="text-gray-300 hover:text-lime-300 transition-colors text-sm sm:text-base">
                   Избранное
                 </Link>
               </li>
@@ -110,17 +109,9 @@ const Footer = () => {
           <div className="text-start">
             <h3 className="font-semibold text-white text-base sm:text-lg mb-3 sm:mb-4 uppercase">Контакты</h3>
             <ul className="space-y-2 sm:space-y-3">
-              <li className="flex items-start gap-2 sm:gap-3 justify-start">
-                <RiMapPin2Line className="text-gray-300 mt-1 flex-shrink-0" size={18} />
-                <span className="text-gray-300 text-sm sm:text-base">г. Брест, ул. Экологическая, 42</span>
-              </li>
-              <li className="flex items-start gap-2 sm:gap-3 justify-start">
-                <MdOutlineLocalPhone className="text-gray-300 flex-shrink-0" size={18} />
-                <span className="text-gray-300 text-sm sm:text-base">+7 (800) 123-45-67</span>
-              </li>
-              <li className="flex items-start gap-2 sm:gap-3 justify-start">
-                <MdOutlineMail className="text-gray-300 flex-shrink-0" size={18} />
-                <span className="text-gray-300 text-sm sm:text-base">info@savenserve.by</span>
+              <li className="flex items-start sm:gap-3 justify-start items-center">
+                <MdOutlineMail className="text-gray-300 flex-shrink-0" size={15} />
+                <span className="text-gray-300 text-sm sm:text-base">team@stillcantfindyrslf.me</span>
               </li>
             </ul>
           </div>

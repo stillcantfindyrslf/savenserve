@@ -129,14 +129,14 @@ const ItemCard: React.FC<ItemCardProps> = ({
 					{isAdmin ? (
 						<div className="flex w-full gap-2">
 							<button
-								className="bg-light-secondary-color text-gray-700 flex-1 h-10 rounded-md flex items-center justify-center gap-1 hover:bg-opacity-80"
+								className="bg-light-secondary-color text-gray-700 flex-1 h-10 rounded-lg flex items-center justify-center gap-1 hover:bg-opacity-80"
 								onClick={handleEdit}
 							>
 								<HiOutlinePencilAlt size={17} />
 								<span>Изменить</span>
 							</button>
 							<button
-								className="bg-red-100 text-red-600 flex-1 h-10 rounded-md flex items-center justify-center gap-1 hover:bg-red-200"
+								className="bg-red-100 text-red-600 flex-1 h-10 rounded-lg flex items-center justify-center gap-1 hover:bg-red-200"
 								onClick={handleDelete}
 							>
 								<FaRegTrashCan size={16} />

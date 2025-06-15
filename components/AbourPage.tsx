@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { NextPage } from 'next';
 import { Card } from '@nextui-org/react';
 import FloatingNavbar from './FloatingNavbar';
-import { MdOutlineEco, MdStorefront, MdShoppingCart, MdOutlineMonitorHeart, MdOutlinePublic } from 'react-icons/md';
+import { MdStorefront, MdShoppingCart, MdOutlineMonitorHeart, MdOutlinePublic } from 'react-icons/md';
 import { IoLeafOutline, IoCheckmarkCircleOutline, IoRocketOutline } from 'react-icons/io5';
 import { PiPlantFill } from 'react-icons/pi';
 import { RiEarthLine } from 'react-icons/ri';
@@ -254,48 +254,6 @@ const AboutPage: NextPage = () => {
             <Link href="/" className="bg-white text-primary-color py-3 px-8 rounded-full font-medium hover:bg-secondary-color hover:text-color-text transition-colors">
               Начать покупки
             </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-12 sm:py-16 bg-light-white-color">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-12">
-            Наше <span className="text-primary-color">влияние</span>
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="p-6 bg-white shadow-sm text-center border-none">
-              <div className="mb-4">
-                <MdOutlineEco className="text-primary-color mx-auto" size={40} />
-              </div>
-              <h3 className="text-3xl font-bold text-color-text mb-1">250+</h3>
-              <p className="text-gray-600">кг продуктов спасено</p>
-            </Card>
-
-            <Card className="p-6 bg-white shadow-sm text-center border-none">
-              <div className="mb-4">
-                <MdStorefront className="text-primary-color mx-auto" size={40} />
-              </div>
-              <h3 className="text-3xl font-bold text-color-text mb-1">15+</h3>
-              <p className="text-gray-600">магазинов-партнеров</p>
-            </Card>
-
-            <Card className="p-6 bg-white shadow-sm text-center border-none">
-              <div className="mb-4">
-                <MdShoppingCart className="text-primary-color mx-auto" size={40} />
-              </div>
-              <h3 className="text-3xl font-bold text-color-text mb-1">500+</h3>
-              <p className="text-gray-600">счастливых покупателей</p>
-            </Card>
-
-            <Card className="p-6 bg-white shadow-sm text-center border-none">
-              <div className="mb-4">
-                <MdOutlinePublic className="text-primary-color mx-auto" size={40} />
-              </div>
-              <h3 className="text-3xl font-bold text-color-text mb-1">300+</h3>
-              <p className="text-gray-600">кг CO₂ предотвращено</p>
-            </Card>
           </div>
         </div>
       </section>
