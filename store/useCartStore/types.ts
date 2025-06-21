@@ -13,6 +13,7 @@ export type CartItem = {
     name: string;
     description: string;
     price: number;
+    address: string;
     quantity: number;
     item_images?: ItemImage[];
     images?: string[];

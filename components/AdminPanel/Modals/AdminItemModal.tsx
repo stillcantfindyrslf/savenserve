@@ -160,12 +160,12 @@ const AdminItemModal: React.FC<AdminItemModalProps> = () => {
 				country_of_origin: currentItem?.country_of_origin || '',
 				information: currentItem?.information || '',
 				normal_price: currentItem?.normal_price || 0,
-				price_per_kg: currentItem?.price_per_kg || 0,
+				price_per_kg: currentItem?.price_per_kg || null,
 				weight: currentItem?.weight || '',
 				quantity: currentItem?.quantity || 0,
 				auto_discount: !noDiscount && autoDiscount,
 				custom_discounts: !noDiscount && !autoDiscount ? customDiscounts : undefined,
-				discount_price: 0
+				discount_price: currentItem?.price || 0
 			};
 
 			let resultItemId: number;

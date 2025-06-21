@@ -8,7 +8,7 @@ import { MdStorefront, MdShoppingCart, MdOutlineMonitorHeart, MdOutlinePublic } 
 import { IoLeafOutline, IoCheckmarkCircleOutline, IoRocketOutline } from 'react-icons/io5';
 import { PiPlantFill } from 'react-icons/pi';
 import { RiEarthLine } from 'react-icons/ri';
-import { BiLineChart } from 'react-icons/bi';
+import { BiShoppingBag } from 'react-icons/bi';
 import Link from 'next/link';
 
 const AboutPage: NextPage = () => {
@@ -85,11 +85,11 @@ const AboutPage: NextPage = () => {
           <Card className="p-6 bg-white shadow-sm hover:shadow-md transition-shadow border-none">
             <div className="flex flex-col items-center text-center">
               <div className="w-16 h-16 rounded-full bg-light-secondary-color flex items-center justify-center mb-4">
-                <BiLineChart className="text-primary-color" size={32} />
+                <BiShoppingBag className="text-primary-color" size={32} />
               </div>
-              <h3 className="text-lg font-semibold mb-3">Ведём контроль</h3>
+              <h3 className="text-lg font-semibold mb-3">Управляем товарами</h3>
               <p className="text-gray-600 text-sm">
-                Постоянный мониторинг за экологическим воздействием: анализируем объемы реализованных товаров и образование отходов
+                Удобная система добавления товаров со сроком годности, установки скидок для магазинов и кафе
               </p>
             </div>
           </Card>
@@ -139,7 +139,7 @@ const AboutPage: NextPage = () => {
                   <h3 className="text-xl font-semibold mb-2">Выбор и заказ</h3>
                   <p className="text-gray-600">
                     Покупатели просматривают ассортимент, выбирают нужные продукты, оформляют заказы
-                    и получают их удобным способом.
+                    и получают их напрямую.
                   </p>
                 </Card>
               </div>

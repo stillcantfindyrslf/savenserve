@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useMemo } from 'react';
 import ItemCard from './ItemCard';
 import useItemsStore from "@/store/useItemStore";
 import { ItemWithImages } from '@/store/useItemStore/types';
@@ -12,22 +12,34 @@ interface ItemCardProps {
 const ItemsList: FC<ItemCardProps> = ({ items, itemsPerPage = 20 }) => {
 	const { isLoading } = useItemsStore();
 	const [currentPage, setCurrentPage] = useState(1);
-	const [displayedItems, setDisplayedItems] = useState<ItemWithImages[]>([]);
 
-	const totalPages = Math.ceil(items.length / itemsPerPage);
-	const showPagination = items.length > itemsPerPage;
+	const availableItems = useMemo(() => {
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+
+		return items.filter(item => {
+			const bestBefore = item.best_before ? new Date(item.best_before) : null;
+			return item.quantity > 0 &&
+				(!bestBefore || bestBefore >= today);
+		});
+	}, [items]);
+
+	const displayedItems = useMemo(() => {
+		const startIndex = (currentPage - 1) * itemsPerPage;
+		const endIndex = startIndex + itemsPerPage;
+		return availableItems.slice(startIndex, endIndex);
+	}, [currentPage, availableItems, itemsPerPage]);
+
+	const totalPages = Math.ceil(availableItems.length / itemsPerPage);
+	const showPagination = availableItems.length > itemsPerPage;
 
 	useEffect(() => {
 		setCurrentPage(1);
 	}, [items]);
 
 	useEffect(() => {
-		const startIndex = (currentPage - 1) * itemsPerPage;
-		const endIndex = startIndex + itemsPerPage;
-		setDisplayedItems(items.slice(startIndex, endIndex));
-
 		window.scrollTo({ top: 0, behavior: 'smooth' });
-	}, [currentPage, items, itemsPerPage]);
+	}, [currentPage]);
 
 	if (isLoading) {
 		return (
@@ -39,14 +51,20 @@ const ItemsList: FC<ItemCardProps> = ({ items, itemsPerPage = 20 }) => {
 
 	return (
 		<>
-			<div className="grid grid-cols-1 cards-xs:grid-cols-2 cards-sm:grid-cols-3 cards-md:grid-cols-2 cards-lg:grid-cols-3 cards-xl:grid-cols-4 gap-3">
-				{displayedItems.map((item) => (
-					<ItemCard
-						key={item.id}
-						item={item}
-					/>
-				))}
-			</div>
+			{availableItems.length === 0 ? (
+				<div className="flex justify-center items-center py-10">
+					<p className="text-lg text-gray-500">Нет доступных товаров</p>
+				</div>
+			) : (
+				<div className="grid grid-cols-1 cards-xs:grid-cols-2 cards-sm:grid-cols-3 cards-md:grid-cols-2 cards-lg:grid-cols-3 cards-xl:grid-cols-4 gap-3">
+					{displayedItems.map((item) => (
+						<ItemCard
+							key={item.id}
+							item={item}
+						/>
+					))}
+				</div>
+			)}
 
 			{showPagination && (
 				<div className="flex justify-center mt-8">

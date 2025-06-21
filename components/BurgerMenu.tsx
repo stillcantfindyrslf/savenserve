@@ -14,6 +14,8 @@ import { FiSearch } from "react-icons/fi";
 import { PiShoppingCartSimpleBold } from "react-icons/pi";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface BurgerMenuProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,6 +42,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({
   handleCatalogClick,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -59,6 +62,15 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({
       .join("")
       .toUpperCase()
       .substring(0, 2);
+  };
+
+  const handleAdminClick = () => {
+    if (!user) {
+      toast.warning("Нужно войти, чтобы получить доступ к админ-панели.");
+      return;
+    }
+    closeMenu();
+    router.push("/admin");
   };
 
   const userAvatarUrl = user?.user_metadata?.avatar_url || null;
@@ -115,21 +127,21 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({
               <div className="border-b pb-4">
                 {user ? (
                   <Link href="/profile" onClick={closeMenu}>
-                  <div className="flex items-center gap-3">
-                    <Avatar
-                      src={userAvatarUrl || undefined}
-                      name={getUserInitials()}
-                      size="md"
-                      radius="full"
-                      color="success"
-                      showFallback
-                    />
-                    <div>
-                      <p className="font-medium text-color-text truncate max-w-[180px]">
-                        {user.user_metadata?.name || user.email}
-                      </p>
+                    <div className="flex items-center gap-3">
+                      <Avatar
+                        src={userAvatarUrl || undefined}
+                        name={getUserInitials()}
+                        size="md"
+                        radius="full"
+                        color="success"
+                        showFallback
+                      />
+                      <div>
+                        <p className="font-medium text-color-text truncate max-w-[180px]">
+                          {user.user_metadata?.name || user.email}
+                        </p>
+                      </div>
                     </div>
-                  </div>
                   </Link>
                 ) : (
                   <Button
@@ -172,15 +184,14 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({
                 </Button>
 
                 {isAdmin && (
-                  <Link href="/admin" onClick={closeMenu}>
-                    <Button
-                      variant="flat"
-                      className="w-full justify-start gap-2 py-3 px-4"
-                    >
-                      <MdOutlineAdminPanelSettings size={20} className="text-color-text" />
-                      <span>Админ-панель</span>
-                    </Button>
-                  </Link>
+                  <Button
+                    variant="flat"
+                    className="w-full justify-start gap-2 py-3 px-4"
+                    onPress={handleAdminClick}
+                  >
+                    <MdOutlineAdminPanelSettings size={20} className="text-color-text" />
+                    <span>Админ-панель</span>
+                  </Button>
                 )}
               </div>
 

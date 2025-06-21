@@ -58,7 +58,7 @@ export const fetchCart = async (): Promise<number | null> => {
 export const fetchCartItems = async (): Promise<CartItem[]> => {
   const { data, error } = await supabase
     .from('cart_items')
-    .select('id, quantity, item:items(id, name, description, price, quantity, item_images(id, item_id, image_url))');
+    .select('id, quantity, item:items(id, name, description, price, address, quantity, item_images(id, item_id, image_url))');
 
   if (error) {
     console.error('Ошибка при загрузке товаров в корзине:', error);
@@ -76,6 +76,7 @@ export const fetchCartItems = async (): Promise<CartItem[]> => {
         description: rawItem.item.description,
         price: rawItem.item.price,
         quantity: rawItem.item.quantity,
+        address: rawItem.item.address,
         item_images: rawItem.item.item_images || []
       }
     };

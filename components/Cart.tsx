@@ -7,7 +7,7 @@ import { Button, RadioGroup, Radio, Divider, Spinner, Image, Card, Tooltip, Chec
 import { toast } from 'sonner';
 import FloatingNavbar from "@/components/FloatingNavbar";
 import { FaRegTrashCan } from "react-icons/fa6";
-import { FaInfoCircle, FaCheck, FaShoppingBasket } from "react-icons/fa";
+import { FaInfoCircle, FaCheck, FaShoppingBasket, FaMapMarkerAlt } from "react-icons/fa";
 import Link from 'next/link';
 
 const Cart = () => {
@@ -183,6 +183,10 @@ const Cart = () => {
                                             <div className="flex flex-col flex-grow w-full sm:w-auto">
                                                 <div className="flex flex-col sm:flex-row sm:items-start justify-between">
                                                     <h3 className="font-semibold text-lg text-color-text">{item.name}</h3>
+                                                    <div className="flex items-center mt-1.5 text-sm text-gray-600">
+                                                        <FaMapMarkerAlt className="mr-1.5 text-primary-color" size={14} />
+                                                        <span>{item.address || "Адрес не указан"}</span>
+                                                    </div>
                                                     {!showPickupMode && (
                                                         <div className="mt-2 sm:mt-0">
                                                             <Tooltip content="Удалить товар">

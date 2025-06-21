@@ -38,7 +38,7 @@ const AppSlider: React.FC<AppSliderProps> = ({ banners }) => {
 					{banners.map((banner) => (
 						<SwiperSlide key={banner.id}>
 							<div className="h-auto md:h-72 relative overflow-hidden bg-gradient-to-r from-green-200 to-lime-200">
-								<div className="container mx-auto h-full px-6 lg:px-8 relative">
+								<div className="w-full h-full px-6 lg:px-8 relative">
 									<div className="flex flex-col md:flex-row h-full">
 										<div className="order-1 md:order-2 md:absolute md:right-0 md:bottom-0 h-48 md:h-full w-full md:w-3/5 lg:w-1/2 z-0">
 											<div className="h-full w-full flex items-center md:items-end justify-center md:justify-end overflow-visible">
