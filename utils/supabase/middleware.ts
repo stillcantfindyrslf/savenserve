@@ -21,14 +21,7 @@ export async function updateSession(request: NextRequest) {
 		}
 	);
 
-	const {
-		data: { session },
-		error,
-	} = await supabase.auth.getSession();
-
-	if (error) {
-		console.error('Ошибка при получении сессии:', error.message);
-	}
+	const { data: { user } } = await supabase.auth.getUser();
 
 	return supabaseResponse;
 }
