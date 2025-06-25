@@ -49,13 +49,11 @@ const BannerManager = () => {
   };
 
   const handleDeleteBanner = async (id: number) => {
-    if (window.confirm(`Вы уверены, что хотите удалить этот баннер?`)) {
-      try {
-        await deleteBanner(id);
-        toast.success('Баннер успешно удален');
-      } catch (error: unknown) {
-        toast.error(getErrorMessage(error as ErrorType) || 'Не удалось удалить баннер');
-      }
+    try {
+      await deleteBanner(id);
+      toast.success('Баннер успешно удален');
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error as ErrorType) || 'Не удалось удалить баннер');
     }
   };
 

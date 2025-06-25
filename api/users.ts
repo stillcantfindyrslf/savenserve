@@ -40,10 +40,7 @@ export const usersApi = {
 
       if (profileError) throw profileError;
 
-      const { error: authError } = await supabase.auth.admin.deleteUser(userId);
-
-      if (authError) throw authError;
-
+      toast.success('Пользователь успешно удален');
       return true;
     } catch (error: unknown) {
       console.error('Error deleting user:', error);

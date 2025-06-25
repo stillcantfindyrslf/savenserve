@@ -65,13 +65,11 @@ const UserManager: React.FC = () => {
   };
 
   const handleDeleteUser = async (id: string) => {
-    if (window.confirm('Вы уверены, что хотите удалить этого пользователя?')) {
-      try {
-        await deleteUser(id);
-        toast.success('Пользователь успешно удален');
-      } catch {
-        toast.error('Не удалось удалить пользователя');
-      }
+    try {
+      await deleteUser(id);
+      toast.success('Пользователь успешно удален');
+    } catch {
+      toast.error('Не удалось удалить пользователя');
     }
   };
 

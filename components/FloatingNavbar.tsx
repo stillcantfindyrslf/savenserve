@@ -117,7 +117,7 @@ const FloatingNavbar: React.FC<NavbarProps> = ({
 								<Input
 									isClearable
 									fullWidth
-									placeholder="Искать Продукты, Овощи или Мясо..."
+									placeholder="Поиск продуктов"
 									size="md"
 									radius="full"
 									startContent={<FiSearch size={24} className="text-primary-color" />}

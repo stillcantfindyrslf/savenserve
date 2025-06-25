@@ -63,13 +63,11 @@ const CategoriesManager = () => {
   };
 
   const handleDeleteCategory = async (category: Category) => {
-    if (window.confirm(`Вы уверены, что хотите удалить категорию "${category.name}"?`)) {
-      try {
-        await deleteCategory(category.id);
-        toast.success('Категория успешно удалена');
-      } catch (error: unknown) {
-        toast.error(getErrorMessage(error as ErrorEvent) || 'Не удалось удалить категорию');
-      }
+    try {
+      await deleteCategory(category.id);
+      toast.success('Категория успешно удалена');
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error as ErrorEvent) || 'Не удалось удалить категорию');
     }
   };
 
@@ -84,13 +82,11 @@ const CategoriesManager = () => {
   };
 
   const handleDeleteSubcategory = async (subcategory: Subcategory) => {
-    if (window.confirm(`Вы уверены, что хотите удалить подкатегорию "${subcategory.name}"?`)) {
-      try {
-        await deleteSubcategory(subcategory.id);
-        toast.success('Подкатегория успешно удалена');
-      } catch (error: unknown) {
-        toast.error(getErrorMessage(error as ErrorType) || 'Не удалось удалить подкатегорию');
-      }
+    try {
+      await deleteSubcategory(subcategory.id);
+      toast.success('Подкатегория успешно удалена');
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error as ErrorType) || 'Не удалось удалить подкатегорию');
     }
   };
 
